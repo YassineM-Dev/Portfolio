@@ -699,206 +699,51 @@
     }
   }
 
-  function setupCursorParticles() {
-    const canvas = document.getElementById("cursor-particles");
+  function setupCursorGlow() {
     const spotlight = document.getElementById("bg-spotlight");
-    if (!canvas || !canvas.getContext) return;
+    if (!spotlight) return;
 
-    const ctx = canvas.getContext("2d");
-    let width = 0;
-    let height = 0;
-    let dpr = 1;
+    let targetX = window.innerWidth * 0.5;
+    let targetY = window.innerHeight * 0.3;
+    let currentX = targetX;
+    let currentY = targetY;
     let rafId = null;
 
-    const pointer = { x: -999, y: -999, active: false };
-    let lastSpawnX = -999;
-    let lastSpawnY = -999;
+    function animate() {
+      currentX += (targetX - currentX) * 0.14;
+      currentY += (targetY - currentY) * 0.14;
+      spotlight.style.setProperty("--mx", `${currentX.toFixed(1)}px`);
+      spotlight.style.setProperty("--my", `${currentY.toFixed(1)}px`);
 
-    const trailParticles = [];
-    const ambientMotes = [];
-    const MAX_TRAIL = 58;
-    const MOTE_COUNT = 24;
-
-    function getPalette() {
-      const isDark = document.documentElement.getAttribute("data-theme") === "dark";
-      return isDark
-        ? {
-            base: "244, 244, 246",
-            accent: "96, 165, 250",
-            moteAlpha: 0.22,
-            lineAlpha: 0.14,
-          }
-        : {
-            base: "17, 17, 19",
-            accent: "37, 99, 235",
-            moteAlpha: 0.16,
-            lineAlpha: 0.11,
-          };
-    }
-
-    function initMotes() {
-      ambientMotes.length = 0;
-      for (let i = 0; i < MOTE_COUNT; i++) {
-        ambientMotes.push({
-          x: Math.random() * width,
-          y: Math.random() * height,
-          vx: (Math.random() - 0.5) * 0.22,
-          vy: (Math.random() - 0.5) * 0.22,
-          r: 1 + Math.random() * 1.1,
-          accent: i % 4 === 0,
-        });
+      if (Math.abs(targetX - currentX) > 0.3 || Math.abs(targetY - currentY) > 0.3) {
+        rafId = requestAnimationFrame(animate);
+      } else {
+        rafId = null;
       }
     }
 
-    function resize() {
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
-      width = window.innerWidth;
-      height = window.innerHeight;
-      canvas.width = Math.floor(width * dpr);
-      canvas.height = Math.floor(height * dpr);
-      canvas.style.width = `${width}px`;
-      canvas.style.height = `${height}px`;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      if (ambientMotes.length === 0) initMotes();
-    }
-
-    function spawnTrail(x, y, count, boost) {
-      for (let i = 0; i < count; i++) {
-        if (trailParticles.length >= MAX_TRAIL) {
-          trailParticles.shift();
-        }
-        const angle = Math.random() * Math.PI * 2;
-        const speed = (0.28 + Math.random() * 0.85) * (boost || 1);
-        trailParticles.push({
-          x: x + (Math.random() - 0.5) * 6,
-          y: y + (Math.random() - 0.5) * 6,
-          vx: Math.cos(angle) * speed,
-          vy: Math.sin(angle) * speed - 0.12,
-          size: 1.2 + Math.random() * 1.7,
-          life: 1,
-          decay: 0.02 + Math.random() * 0.016,
-          accent: Math.random() < 0.35,
-        });
-      }
-    }
-
-    function onPointerMove(event) {
-      const x = event.clientX;
-      const y = event.clientY;
-      pointer.x = x;
-      pointer.y = y;
-      pointer.active = true;
-
-      if (spotlight) {
-        spotlight.style.setProperty("--mx", `${x}px`);
-        spotlight.style.setProperty("--my", `${y}px`);
+    window.addEventListener(
+      "pointermove",
+      (event) => {
+        targetX = event.clientX;
+        targetY = event.clientY;
         if (!spotlight.classList.contains("is-active")) {
+          currentX = targetX;
+          currentY = targetY;
+          spotlight.style.setProperty("--mx", `${currentX}px`);
+          spotlight.style.setProperty("--my", `${currentY}px`);
           spotlight.classList.add("is-active");
         }
-      }
-
-      const dx = x - lastSpawnX;
-      const dy = y - lastSpawnY;
-      if (dx * dx + dy * dy >= 169) {
-        spawnTrail(x, y, 2, 1);
-        lastSpawnX = x;
-        lastSpawnY = y;
-      }
-    }
-
-    function onPointerDown(event) {
-      if (event.pointerType === "mouse" || event.pointerType === "touch") {
-        spawnTrail(event.clientX, event.clientY, 5, 1.35);
-      }
-    }
-
-    function onPointerLeave() {
-      pointer.active = false;
-      if (spotlight) spotlight.classList.remove("is-active");
-    }
-
-    function tick() {
-      if (document.hidden) {
-        rafId = null;
-        return;
-      }
-
-      ctx.clearRect(0, 0, width, height);
-      const pal = getPalette();
-
-      // Draw gentle ambient motes + faint proximity filaments near cursor
-      for (let i = 0; i < ambientMotes.length; i++) {
-        const m = ambientMotes[i];
-        m.x += m.vx;
-        m.y += m.vy;
-
-        if (m.x < -10) m.x = width + 10;
-        if (m.x > width + 10) m.x = -10;
-        if (m.y < -10) m.y = height + 10;
-        if (m.y > height + 10) m.y = -10;
-
-        if (pointer.active) {
-          const dx = pointer.x - m.x;
-          const dy = pointer.y - m.y;
-          const dist = Math.hypot(dx, dy);
-          if (dist < 130 && dist > 1) {
-            const alpha = (1 - dist / 130) * pal.lineAlpha;
-            ctx.beginPath();
-            ctx.moveTo(m.x, m.y);
-            ctx.lineTo(pointer.x, pointer.y);
-            ctx.strokeStyle = `rgba(${m.accent ? pal.accent : pal.base}, ${alpha.toFixed(3)})`;
-            ctx.lineWidth = 0.8;
-            ctx.stroke();
-
-            // Very light magnetic repulsion so motes feel airy
-            m.x -= (dx / dist) * 0.25;
-            m.y -= (dy / dist) * 0.25;
-          }
+        if (!rafId) {
+          rafId = requestAnimationFrame(animate);
         }
+      },
+      { passive: true }
+    );
 
-        ctx.beginPath();
-        ctx.arc(m.x, m.y, m.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${m.accent ? pal.accent : pal.base}, ${pal.moteAlpha})`;
-        ctx.fill();
-      }
-
-      // Draw light cursor trail particles
-      for (let i = trailParticles.length - 1; i >= 0; i--) {
-        const p = trailParticles[i];
-        p.x += p.vx;
-        p.y += p.vy;
-        p.vx *= 0.965;
-        p.vy *= 0.965;
-        p.life -= p.decay;
-
-        if (p.life <= 0) {
-          trailParticles.splice(i, 1);
-          continue;
-        }
-
-        const alpha = p.life * (p.accent ? 0.56 : 0.38);
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size * (0.45 + p.life * 0.55), 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${p.accent ? pal.accent : pal.base}, ${alpha.toFixed(3)})`;
-        ctx.fill();
-      }
-
-      rafId = requestAnimationFrame(tick);
-    }
-
-    function startLoop() {
-      if (!rafId && !document.hidden) {
-        rafId = requestAnimationFrame(tick);
-      }
-    }
-
-    resize();
-    window.addEventListener("resize", resize, { passive: true });
-    window.addEventListener("pointermove", onPointerMove, { passive: true });
-    window.addEventListener("pointerdown", onPointerDown, { passive: true });
-    document.addEventListener("mouseleave", onPointerLeave);
-    document.addEventListener("visibilitychange", startLoop);
-    startLoop();
+    document.addEventListener("mouseleave", () => {
+      spotlight.classList.remove("is-active");
+    });
   }
 
   function renderAll() {
@@ -910,5 +755,5 @@
   renderAll();
   setupEvents();
   setupRevealAndScrollSpy();
-  setupCursorParticles();
+  setupCursorGlow();
 })();
