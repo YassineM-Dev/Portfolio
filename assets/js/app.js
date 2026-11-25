@@ -704,10 +704,6 @@
     const spotlight = document.getElementById("bg-spotlight");
     if (!canvas || !canvas.getContext) return;
 
-    const reduceMotion =
-      window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduceMotion) return;
-
     const ctx = canvas.getContext("2d");
     let width = 0;
     let height = 0;
@@ -880,7 +876,7 @@
           continue;
         }
 
-        const alpha = p.life * (p.accent ? 0.42 : 0.28);
+        const alpha = p.life * (p.accent ? 0.56 : 0.38);
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size * (0.45 + p.life * 0.55), 0, Math.PI * 2);
         ctx.fillStyle = `rgba(${p.accent ? pal.accent : pal.base}, ${alpha.toFixed(3)})`;
