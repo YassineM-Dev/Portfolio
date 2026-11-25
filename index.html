@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yassine — Portfolio</title>
+  <meta name="description" content="Minimalist developer portfolio of Yassine featuring AlgoStudio, Compresseur App, and Bac For All." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <script>
+    // Apply saved theme before first paint to prevent flash
+    (function () {
+      try {
+        var saved = localStorage.getItem("yassine_theme");
+        if (saved === "dark" || saved === "light") {
+          document.documentElement.setAttribute("data-theme", saved);
+        } else if (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+          document.documentElement.setAttribute("data-theme", "dark");
+        }
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header" id="top">
+    <div class="container header-inner">
+      <a href="#top" class="brand" aria-label="Yassine home">
+        <span class="brand-name" id="brand-name">Yassine</span><span class="brand-dot" aria-hidden="true">.</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Primary navigation">
+        <a href="#projects" class="nav-link" data-i18n="nav.projects">Projects</a>
+        <a href="#about" class="nav-link" data-i18n="nav.about">About</a>
+        <a href="#contact" class="nav-link" data-i18n="nav.contact">Contact</a>
+      </nav>
+
+      <div class="header-controls">
+        <button type="button" class="control-btn mono" id="lang-toggle" aria-label="Switch language" title="Switch language">
+          FR
+        </button>
+        <button type="button" class="control-btn icon-btn" id="theme-toggle" aria-label="Toggle color theme" title="Toggle theme">
+          <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
+          </svg>
+          <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Hero -->
+    <section class="hero section">
+      <div class="container">
+        <div class="hero-meta reveal">
+          <span class="eyebrow mono" id="hero-eyebrow">Software Developer</span>
+          <span class="status-pill">
+            <span class="status-dot" aria-hidden="true"></span>
+            <span id="hero-availability">Available for projects</span>
+          </span>
+        </div>
+
+        <h1 class="hero-title reveal" id="hero-headline">
+          Designing and building focused software.
+        </h1>
+
+        <p class="hero-subtitle reveal" id="hero-subheadline">
+          I build modern desktop and web applications, developer environments, and lightweight utilities focused on clarity, structure, and performance.
+        </p>
+
+        <div class="hero-actions reveal">
+          <a href="#projects" class="btn btn-primary">
+            <span data-i18n="hero.ctaProjects">View Projects</span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 12h14"></path>
+              <path d="m12 5 7 7-7 7"></path>
+            </svg>
+          </a>
+          <a href="#contact" class="btn btn-secondary" data-i18n="hero.ctaContact">Get in Touch</a>
+        </div>
+
+        <dl class="hero-metrics reveal" aria-label="Overview">
+          <div class="metric-item">
+            <dt class="mono" data-i18n="metrics.projects">Projects</dt>
+            <dd class="mono" id="metric-project-count">03</dd>
+          </div>
+          <div class="metric-item">
+            <dt class="mono" data-i18n="metrics.focus">Focus</dt>
+            <dd id="metric-focus">Desktop &amp; Web Apps</dd>
+          </div>
+          <div class="metric-item">
+            <dt class="mono" data-i18n="metrics.location">Location</dt>
+            <dd id="metric-location">Remote / Worldwide</dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- Projects -->
+    <section class="section" id="projects">
+      <div class="container">
+        <div class="section-header reveal">
+          <div>
+            <span class="section-kicker mono" data-i18n="projects.kicker">Selected Work</span>
+            <h2 class="section-title">
+              <span data-i18n="projects.title">Projects</span>
+              <span class="count-badge mono" id="projects-count">03</span>
+            </h2>
+          </div>
+
+          <div class="filter-bar" id="project-filters" role="tablist" aria-label="Filter projects by category">
+            <!-- Rendered dynamically from data.js -->
+          </div>
+        </div>
+
+        <div class="projects-grid" id="projects-grid">
+          <!-- Rendered dynamically from data.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section class="section section-bordered" id="about">
+      <div class="container">
+        <div class="about-grid">
+          <div class="about-intro reveal">
+            <span class="section-kicker mono" data-i18n="about.kicker">Background</span>
+            <h2 class="section-title" data-i18n="about.title">About</h2>
+            <div class="about-copy" id="about-copy">
+              <!-- Rendered dynamically from data.js -->
+            </div>
+          </div>
+
+          <div class="skills-panel reveal">
+            <span class="section-kicker mono" data-i18n="about.stackKicker">Capabilities</span>
+            <div class="skills-list" id="skills-list">
+              <!-- Rendered dynamically from data.js -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="section section-bordered" id="contact">
+      <div class="container">
+        <div class="contact-grid">
+          <div class="contact-info reveal">
+            <span class="section-kicker mono" data-i18n="contact.kicker">Contact</span>
+            <h2 class="section-title" data-i18n="contact.title">Let's work together.</h2>
+            <p class="contact-desc" data-i18n="contact.desc">
+              Have a project in mind, a question about my work, or an opportunity to discuss? Send a direct message or copy my email below.
+            </p>
+
+            <div class="email-box">
+              <span class="email-address mono" id="contact-email">yassinemami41@gmail.com</span>
+              <button type="button" class="btn-inline mono" id="copy-email-btn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect x="9" y="9" width="13" height="13" rx="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                <span id="copy-email-label" data-i18n="contact.copy">Copy</span>
+              </button>
+            </div>
+
+            <div class="social-links" id="social-links">
+              <!-- Rendered dynamically from data.js -->
+            </div>
+          </div>
+
+          <form class="contact-form reveal" id="contact-form" novalidate>
+            <div class="form-field">
+              <label for="input-name" data-i18n="form.name">Name</label>
+              <input type="text" id="input-name" name="name" autocomplete="name" required placeholder="Your name" />
+            </div>
+
+            <div class="form-field">
+              <label for="input-email" data-i18n="form.email">Email</label>
+              <input type="email" id="input-email" name="email" autocomplete="email" required placeholder="you@example.com" />
+            </div>
+
+            <div class="form-field">
+              <label for="input-message" data-i18n="form.message">Message</label>
+              <textarea id="input-message" name="message" rows="4" required placeholder="Tell me about your project..."></textarea>
+            </div>
+
+            <div class="form-footer">
+              <button type="submit" class="btn btn-primary" data-i18n="form.submit">Send Message</button>
+              <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p class="footer-copy mono">&copy; <span id="footer-year">2026</span> <span id="footer-name">Yassine</span></p>
+      <a href="#top" class="footer-top mono">
+        <span data-i18n="footer.top">Back to top</span>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 19V5"></path>
+          <path d="m5 12 7-7 7 7"></path>
+        </svg>
+      </a>
+    </div>
+  </footer>
+
+  <!-- Project Detail Modal -->
+  <div class="modal-backdrop" id="project-modal" hidden aria-hidden="true">
+    <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-top">
+        <div class="modal-meta mono">
+          <span id="modal-index">01</span>
+          <span class="sep" aria-hidden="true">/</span>
+          <span id="modal-year">2026</span>
+          <span class="sep" aria-hidden="true">/</span>
+          <span id="modal-category">Web App</span>
+        </div>
+        <button type="button" class="control-btn icon-btn" id="modal-close" aria-label="Close project details">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M18 6 6 18"></path>
+            <path d="m6 6 12 12"></path>
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal-preview" id="modal-preview"></div>
+
+      <div class="modal-body">
+        <div class="modal-heading-row">
+          <h3 class="modal-title" id="modal-title">Project Title</h3>
+          <span class="badge-outline mono" id="modal-status">Active</span>
+        </div>
+
+        <p class="modal-description" id="modal-description"></p>
+
+        <div class="modal-section">
+          <h4 class="modal-section-label mono" data-i18n="modal.highlights">Key Highlights</h4>
+          <ul class="modal-highlights" id="modal-highlights"></ul>
+        </div>
+
+        <div class="modal-section">
+          <h4 class="modal-section-label mono" data-i18n="modal.stack">Technologies</h4>
+          <div class="tag-list" id="modal-stack"></div>
+        </div>
+
+        <div class="modal-actions" id="modal-actions"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="data.js" defer></script>
+  <script src="app.js" defer></script>
+</body>
+</html>
