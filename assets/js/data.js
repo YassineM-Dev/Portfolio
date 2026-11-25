@@ -1,10 +1,8 @@
 /**
  * Portfolio Data Configuration — Yassine
  *
- * How to add a new project:
- * Copy one object inside the `projects` array below, increment its `index`,
- * update the fields, and save. The portfolio grid, counter, filters, and
- * detail modal update automatically.
+ * Add a new project by appending an object to the `projects` array.
+ * The grid, counter, category filters, and detail modal update automatically.
  */
 
 window.PORTFOLIO_DATA = {
@@ -17,20 +15,20 @@ window.PORTFOLIO_DATA = {
       fr: "Disponible pour des projets",
     },
     eyebrow: {
-      en: "Software Developer",
-      fr: "Développeur Logiciel",
+      en: "Software & Web Developer",
+      fr: "Développeur Logiciel & Web",
     },
     headline: {
-      en: "Designing and building focused software.",
-      fr: "Concevoir et développer des logiciels épurés.",
+      en: "Hi, I'm Yassine. I build practical software.",
+      fr: "Je suis Yassine. Je crée des logiciels utiles.",
     },
     subheadline: {
-      en: "I build modern desktop and web applications, developer environments, and lightweight utilities focused on clarity, structure, and performance.",
-      fr: "Je conçois des applications bureau et web modernes, des environnements de développement et des utilitaires rapides, centrés sur la clarté et la performance.",
+      en: "Software and web developer building Windows desktop tools, educational platforms, and clean web interfaces designed for real everyday use.",
+      fr: "Développeur logiciel et web concevant des outils bureau Windows, des plateformes éducatives et des sites rapides, pensés pour un usage concret.",
     },
     location: {
-      en: "Remote / Worldwide",
-      fr: "À distance / International",
+      en: "Tunisia",
+      fr: "Tunisie",
     },
     focus: {
       en: "Desktop & Web Apps",
@@ -38,12 +36,12 @@ window.PORTFOLIO_DATA = {
     },
     about: {
       en: [
-        "I am Yassine, a software developer focused on building practical tools that feel fast, structured, and purposeful. I prioritize clean architecture and restrained interfaces over unnecessary complexity.",
-        "From a full desktop algorithmics IDE to lightweight everyday utilities, every project in this portfolio is engineered to solve real workflows with maintainable code and attention to detail.",
+        "I'm Yassine, a developer based in Tunisia focused on building reliable, straightforward software across desktop and the web. I care about clean interfaces, clear structure, and fast performance.",
+        "Each project here solves a real problem — from a full Windows IDE for writing and running algorithmic pseudocode and an FFmpeg video compressor, to a Baccalaureate revision platform with 65 summaries and a custom gaming creator hub.",
       ],
       fr: [
-        "Je suis Yassine, développeur logiciel orienté vers la création d'outils pratiques, rapides et bien structurés. Je privilégie une architecture propre et des interfaces sobres plutôt que la complexité inutile.",
-        "D'un IDE bureau complet dédié à l'algorithmique aux utilitaires du quotidien, chaque projet présenté ici répond à un besoin concret avec rigueur et simplicité.",
+        "Je suis Yassine, développeur basé en Tunisie, spécialisé dans la création de logiciels bureau et d'applications web fiables et épurées. J'accorde une attention particulière à la clarté, à la structure et à la performance.",
+        "Chaque projet présenté répond à un besoin concret : un IDE Windows complet pour l'algorithmique, un utilitaire vidéo FFmpeg, une plateforme de révision du Bac avec 65 résumés et un site créateur gaming sur mesure.",
       ],
     },
     links: [
@@ -53,25 +51,24 @@ window.PORTFOLIO_DATA = {
 
   skills: [
     {
-      group: { en: "Languages & Core", fr: "Langages & Fondamentaux" },
-      items: ["TypeScript", "JavaScript", "C# / .NET", "Algorithms"],
+      group: { en: "Languages", fr: "Langages" },
+      items: ["TypeScript", "JavaScript", "C# / .NET 8", "HTML / CSS"],
     },
     {
-      group: { en: "Applications & UI", fr: "Applications & UI" },
-      items: ["React", "Electron", "HTML / CSS", "Windows Forms"],
+      group: { en: "Frameworks & UI", fr: "Frameworks & UI" },
+      items: ["React", "Electron", "Monaco Editor", "Windows Forms"],
     },
     {
-      group: { en: "Engineering & Tools", fr: "Ingénierie & Outils" },
-      items: ["Monaco Editor", "FFmpeg", "Vite", "Desktop Builds"],
+      group: { en: "Tools & Systems", fr: "Outils & Systèmes" },
+      items: ["FFmpeg", "Vite", "Git & GitHub", "Desktop Packaging"],
     },
   ],
 
   /**
    * Projects List
-   * Optional fields:
-   * - image: path to a screenshot (e.g. "./assets/algostudio.png"). Leave "" to use the built-in minimal preview.
-   * - liveUrl: URL to the live demo. Leave "" if not deployed yet.
-   * - repoUrl: URL to the source code repository. Leave "" if private.
+   * - image: optional screenshot path (leave "" to use the custom preview).
+   * - liveUrl: optional live site URL.
+   * - repoUrl: optional GitHub repository URL.
    */
   projects: [
     {
@@ -89,23 +86,23 @@ window.PORTFOLIO_DATA = {
         fr: "Actif",
       },
       summary: {
-        en: "Dedicated Windows desktop IDE for writing, running, and debugging algorithmic pseudocode with automatic TDO and execution trace.",
-        fr: "IDE bureau Windows dédié à l'écriture, l'exécution et le débogage d'algorithmes en pseudocode avec TDO et trace automatiques.",
+        en: "Windows desktop IDE for writing and executing algorithmic pseudocode with automatic TDO, execution trace, and built-in Bac Informatique resources.",
+        fr: "IDE bureau Windows pour écrire et exécuter des algorithmes en pseudocode avec TDO automatique, trace d'exécution et ressources Bac Informatique intégrées.",
       },
       description: {
-        en: "AlgoStudio is a dedicated desktop IDE built for writing and executing structured algorithmic pseudocode. Powered by Monaco Editor, React, and Electron, it runs algorithms in real time, automatically generates variable declaration tables (TDO) and execution traces, and integrates a built-in reference guide, 27 standard modules, and auto-updating Windows releases.",
-        fr: "AlgoStudio est un IDE bureau Windows conçu pour écrire et exécuter des algorithmes en pseudocode selon la convention officielle. Basé sur Monaco Editor, React et Electron, il exécute le code en temps réel, génère automatiquement le TDO et la trace d'exécution, et intègre un guide complet, 27 modules standards ainsi que des mises à jour automatiques.",
+        en: "AlgoStudio is a Windows desktop IDE built for algorithmics and Tunisian Bac Informatique students. Powered by Monaco Editor, React, and Electron, it runs pseudocode in real time, automatically generates variable tables (TDO) and execution traces, and bundles a 12-chapter algorithmics guide, 27 standard modules, and a 2008–2026 past exams archive with auto-updating Windows releases.",
+        fr: "AlgoStudio est un IDE bureau Windows conçu pour l'algorithmique et les élèves du Bac Informatique Tunisien. Basé sur Monaco Editor, React et Electron, il exécute le pseudocode en temps réel, génère automatiquement le TDO et la trace d'exécution, et intègre un guide de 12 chapitres, 27 modules standards ainsi que les sujets du Bac (2008–2026) avec mises à jour automatiques.",
       },
       highlights: {
         en: [
-          "Real-time pseudocode interpreter with automatic TDO and step-by-step trace output",
-          "Multi-tab Monaco editor supporting algorithmic symbols (← ≠ ≤ ≥), smart completion, and Light/Dark themes",
-          "Packaged as Windows Setup (auto-update) and Portable executables with automated tests",
+          "Real-time Tunisian-convention pseudocode execution with automatic TDO and execution trace",
+          "Multi-tab Monaco editor with algorithmic symbols (← ≠ ≤ ≥), autocomplete toggle, and Light/Dark themes",
+          "Includes a 12-chapter guide, 27 ready-to-run modules, 2008–2026 Bac exams archive, and Setup/Portable Windows builds",
         ],
         fr: [
-          "Interpréteur pseudocode en temps réel avec génération automatique du TDO et de la trace d'exécution",
+          "Exécution en temps réel du pseudocode (convention tunisienne) avec TDO et trace automatiques",
           "Éditeur Monaco multi-onglets avec symboles algorithmiques (← ≠ ≤ ≥), complétion et mode clair/sombre",
-          "Distribué en installateur Windows (auto-update) et version portable avec tests automatisés",
+          "Intègre un guide de 12 chapitres, 27 modules standards, les sujets du Bac (2008–2026) et des builds Windows Setup/Portable",
         ],
       },
       stack: ["TypeScript", "React", "Electron", "Monaco Editor"],
@@ -129,26 +126,26 @@ window.PORTFOLIO_DATA = {
         fr: "Actif",
       },
       summary: {
-        en: "Windows desktop utility for high-quality FFmpeg video compression (CRF) and instant 60 / 120 FPS timestamp patching.",
-        fr: "Utilitaire bureau Windows pour la compression vidéo FFmpeg haute qualité (CRF) et le patch instantané 60 / 120 FPS.",
+        en: "Windows desktop utility powered by FFmpeg for high-quality CRF video compression and instant 60 / 120 FPS TikTok timestamp patching.",
+        fr: "Utilitaire bureau Windows propulsé par FFmpeg pour la compression vidéo CRF haute qualité et le patch instantané 60 / 120 FPS pour TikTok.",
       },
       description: {
-        en: "Compresseur App is a self-contained C# / .NET 8 Windows desktop application powered by FFmpeg. Built with a custom frosted-glass drag-and-drop interface, it combines high-efficiency libx264 CRF video compression with lossless 60/120 FPS stream-copy timestamp patching, bundled FFmpeg auto-extraction, and live Discord Rich Presence status.",
-        fr: "Compresseur App est une application bureau Windows autonome en C# / .NET 8 propulsée par FFmpeg. Dotée d'une interface moderne en verre dépoli avec glisser-déposer, elle réunit compression vidéo libx264 (CRF), patch instantané 60/120 FPS sans ré-encodage, extraction automatique de FFmpeg et statut Discord Rich Presence en direct.",
+        en: "Compresseur App is a self-contained C# / .NET 8 Windows desktop application built with a custom frosted-glass drag-and-drop interface. It combines libx264 CRF video compression (with Lanczos scaling and motion interpolation) with lossless 60/120 FPS stream-copy timestamp patching, bundled FFmpeg auto-extraction, and live Discord Rich Presence status.",
+        fr: "Compresseur App est une application bureau Windows autonome en C# / .NET 8 dotée d'une interface en verre dépoli avec glisser-déposer. Elle réunit la compression vidéo libx264 (CRF, mise à l'échelle Lanczos et interpolation de mouvement) et le patch instantané 60/120 FPS sans ré-encodage, avec FFmpeg intégré et statut Discord Rich Presence en direct.",
       },
       highlights: {
         en: [
-          "High-quality libx264 video compression with selectable CRF presets (16–26) and Lanczos scaling",
+          "High-quality libx264 compression with selectable CRF levels (16–26), Lanczos scaling, and motion interpolation",
           "Instant 60 / 120 FPS timestamp patching via stream-copy without re-encoding",
-          "Self-contained .NET 8 single-file executable with bundled FFmpeg and Discord Rich Presence",
+          "Standalone .NET 8 executable with bundled FFmpeg auto-extraction and live Discord Rich Presence",
         ],
         fr: [
-          "Compression vidéo libx264 haute qualité avec niveaux CRF configurables (16–26) et mise à l'échelle Lanczos",
+          "Compression vidéo libx264 haute qualité avec niveaux CRF (16–26), mise à l'échelle Lanczos et interpolation",
           "Patch instantané des timestamps 60 / 120 FPS en copie directe sans ré-encodage",
-          "Exécutable autonome .NET 8 intégrant FFmpeg et l'affichage de statut Discord Rich Presence",
+          "Exécutable autonome .NET 8 avec extraction automatique de FFmpeg et statut Discord Rich Presence",
         ],
       },
-      stack: ["C#", ".NET 8", "FFmpeg", "Windows Desktop"],
+      stack: ["C#", ".NET 8", "FFmpeg", "Windows Forms"],
       visualType: "compresseur",
       image: "",
       liveUrl: "",
@@ -169,23 +166,23 @@ window.PORTFOLIO_DATA = {
         fr: "En ligne",
       },
       summary: {
-        en: "Structured revision web platform organizing Tunisian Baccalaureate study sheets and summaries across all 6 academic sections.",
-        fr: "Plateforme web éducative regroupant les fiches de révision et résumés du Baccalauréat Tunisien pour les 6 sections.",
+        en: "Educational web platform providing 65 structured study summaries across all 6 Tunisian Baccalaureate sections, with instant search and progress tracking.",
+        fr: "Plateforme web éducative regroupant 65 résumés structurés pour les 6 sections du Baccalauréat Tunisien, avec recherche rapide et suivi de révision.",
       },
       description: {
-        en: "Bac For All is a fast, distraction-free educational website built to help Baccalaureate students review efficiently. Students choose their academic track (Computer Science, Mathematics, Experimental Sciences, Technical, Economics & Management, or Literature) to access structured subject summaries with responsive Light and Dark reading modes.",
-        fr: "Bac For All est un site éducatif rapide et épuré conçu pour aider les élèves du Baccalauréat Tunisien à réviser efficacement. Chaque élève choisit sa section (Informatique, Mathématiques, Sciences Expérimentales, Techniques, Économie & Gestion ou Lettres) pour accéder aux fiches organisées par matière avec mode clair et sombre.",
+        en: "Bac For All is a fast, distraction-free revision website designed for Tunisian Baccalaureate students. Users pick their section (Computer Science, Mathematics, Experimental Sciences, Technical, Economics & Management, or Literature) to browse 65 organized summaries, search by subject or chapter, track their revision progress, and switch between Light and Dark reading modes.",
+        fr: "Bac For All est un site de révision rapide et clair conçu pour les élèves du Baccalauréat Tunisien. Chaque élève choisit sa section (Informatique, Mathématiques, Sciences Expérimentales, Techniques, Économie & Gestion ou Lettres) pour consulter 65 résumés complets, rechercher par matière ou chapitre, suivre sa progression et basculer entre mode clair et sombre.",
       },
       highlights: {
         en: [
-          "Covers all 6 Tunisian Baccalaureate sections with structured subject cheat sheets",
-          "Clean section-picker workflow built for fast revision on desktop and mobile",
-          "Lightweight static architecture with persistent Light and Dark reading modes",
+          "65 complete summaries organized across all 6 Tunisian Baccalaureate sections",
+          "Built-in subject and chapter search paired with local revision progress tracking",
+          "Fast static architecture with responsive layout and persistent Light/Dark reading modes",
         ],
         fr: [
-          "Couvre les 6 sections du Baccalauréat Tunisien avec des fiches structurées par matière",
-          "Navigation rapide par choix de section adaptée aux écrans PC et mobile",
-          "Architecture web légère avec mode lecture clair et sombre persistant",
+          "65 résumés complets organisés pour les 6 sections du Baccalauréat Tunisien",
+          "Recherche instantanée par matière ou chapitre et barre de progression locale",
+          "Site statique léger, responsive sur PC et mobile, avec mode clair/sombre persistant",
         ],
       },
       stack: ["HTML", "CSS", "JavaScript", "Education"],
@@ -209,23 +206,23 @@ window.PORTFOLIO_DATA = {
         fr: "En ligne",
       },
       summary: {
-        en: "Interactive creator hub and gaming portfolio for JOYBOY showcasing gaming, video editing, and content creation.",
-        fr: "Portfolio gaming interactif et hub créateur pour JOYBOY réunissant gaming, montage vidéo et création de contenu.",
+        en: "Official dark-themed creator website for JOYBOY combining gaming, video editing links, animated stats, and an integrated digital store.",
+        fr: "Site vitrine sombre officiel pour JOYBOY réunissant gaming, montage vidéo, statistiques animées et boutique numérique intégrée.",
       },
       description: {
-        en: "A custom dark-themed creator portfolio built for JOYBOY's gaming and video editing brand. Features an animated preloader, HTML5 Canvas particle background, stylized display typography, preloaded WebP media assets, and a centralized social links hub.",
-        fr: "Un portfolio créateur au thème sombre conçu pour l'univers gaming et montage vidéo de JOYBOY. Il combine un écran de chargement animé, un arrière-plan de particules en Canvas HTML5, une typographie stylisée, des médias WebP optimisés et un hub de liens centralisé.",
+        en: "A custom creator website built for JOYBOY's gaming and video editing presence. Features an animated loading screen, interactive HTML5 Canvas particles, live social counter animations (TikTok, Instagram, Discord), an integrated store section for editing presets and packs, optional ambient audio controls, and preloaded WebP media.",
+        fr: "Un site créateur sur mesure conçu pour l'univers gaming et montage vidéo de JOYBOY. Il comprend un écran de chargement animé, un arrière-plan en Canvas HTML5, des compteurs de statistiques sociaux (TikTok, Instagram, Discord), une boutique intégrée pour presets et packs, un lecteur audio optionnel et des médias WebP préchargés.",
       },
       highlights: {
         en: [
-          "Interactive HTML5 Canvas particle background, animated preloader, and scroll-reveal motion",
-          "Performance-focused static build with preloaded WebP assets and clean metadata",
-          "Centralized creator hub dedicated to gaming, video editing, and content creation",
+          "Animated preloader, HTML5 Canvas background, glitch display heading, and scroll-reveal cards",
+          "Integrated Store section for presets & packs alongside animated TikTok, Instagram, and Discord counters",
+          "Performance-tuned static build using preloaded WebP assets and clean security headers",
         ],
         fr: [
-          "Arrière-plan de particules en Canvas HTML5, préchargement animé et animations au défilement",
-          "Site statique optimisé avec médias WebP préchargés et métadonnées soignées",
-          "Hub créateur centralisé dédié au gaming, au montage vidéo et à la création de contenu",
+          "Écran de chargement animé, arrière-plan Canvas HTML5, titre stylisé et cartes animées au défilement",
+          "Section Boutique dédiée aux presets et packs avec compteurs animés TikTok, Instagram et Discord",
+          "Site statique optimisé avec médias WebP préchargés et en-têtes de sécurité propres",
         ],
       },
       stack: ["HTML", "CSS", "JavaScript", "Canvas"],

@@ -6,10 +6,10 @@ Minimalist, fast, zero-dependency developer portfolio showcasing Yassine's deskt
 
 ## Featured Projects
 
-1. **[AlgoStudio](https://github.com/YassineM-Dev/algostudio)** — Dedicated Windows desktop IDE (`TypeScript`, `React`, `Electron`, `Monaco Editor`) for writing, executing, and debugging algorithmic pseudocode with automatic TDO and execution trace generation.
-2. **[Compresseur App](https://github.com/YassineM-Dev/CompresseurApp)** — Self-contained Windows desktop utility (`C#`, `.NET 8`, `FFmpeg`) for high-quality `libx264` CRF video compression and instant 60 / 120 FPS timestamp patching.
-3. **[Bac For All](https://yassinem-dev.github.io/Bac-For-All/)** ([Source](https://github.com/YassineM-Dev/Bac-For-All)) — Educational web platform organizing Tunisian Baccalaureate revision sheets across all 6 academic sections.
-4. **[Gaming Portfolio](https://king-joyboy-dev.github.io/Joyboy/)** — Interactive creator hub and gaming portfolio for JOYBOY featuring HTML5 Canvas particles, animated preloader, and optimized WebP assets.
+1. **[AlgoStudio](https://github.com/YassineM-Dev/algostudio)** — Windows desktop IDE (`TypeScript`, `React`, `Electron`, `Monaco Editor`) for writing and running Tunisian-convention algorithmic pseudocode with automatic TDO, execution trace, a 12-chapter guide, 27 standard modules, and 2008–2026 Bac exams archive.
+2. **[Compresseur App](https://github.com/YassineM-Dev/CompresseurApp)** — Self-contained Windows desktop utility (`C#`, `.NET 8`, `FFmpeg`, `Windows Forms`) for high-quality `libx264` CRF video compression, instant 60 / 120 FPS TikTok timestamp patching, and Discord Rich Presence.
+3. **[Bac For All](https://yassinem-dev.github.io/Bac-For-All/)** ([Source](https://github.com/YassineM-Dev/Bac-For-All)) — Educational revision platform featuring 65 structured summaries across all 6 Tunisian Baccalaureate sections, instant search, and progress tracking.
+4. **[Gaming Portfolio](https://king-joyboy-dev.github.io/Joyboy/)** — Official creator website for JOYBOY combining gaming, video editing links, animated stats, HTML5 Canvas effects, and an integrated digital store.
 
 ## Project Structure
 

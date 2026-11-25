@@ -277,7 +277,7 @@
             <div class="edu-stage">
               <div class="edu-grid">${gridMarkup}</div>
               <div class="edu-footer">
-                <span>6 Sections &middot; Study Sheets</span>
+                <span>6 Sections &middot; 65 Summaries</span>
                 <span class="edu-live-pill">Live</span>
               </div>
             </div>
@@ -304,11 +304,11 @@
               </div>
               <div class="gp-links">
                 <div class="gp-link-row">
-                  <span>Official Channels</span>
+                  <span>Store &mdash; Presets &amp; Packs</span>
                   <span class="gp-arrow mono">&nearr;</span>
                 </div>
                 <div class="gp-link-row is-subtle">
-                  <span>Edits &amp; Highlights</span>
+                  <span>TikTok &middot; Instagram &middot; Discord</span>
                   <span class="gp-arrow mono">&nearr;</span>
                 </div>
               </div>
