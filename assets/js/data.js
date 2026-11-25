@@ -194,5 +194,45 @@ window.PORTFOLIO_DATA = {
       liveUrl: "https://yassinem-dev.github.io/Bac-For-All/",
       repoUrl: "https://github.com/YassineM-Dev/Bac-For-All",
     },
+    {
+      id: "gaming-portfolio",
+      index: "04",
+      title: "Gaming Portfolio",
+      year: "2026",
+      category: {
+        key: "web-app",
+        en: "Web App",
+        fr: "Application Web",
+      },
+      status: {
+        en: "Live",
+        fr: "En ligne",
+      },
+      summary: {
+        en: "Interactive creator hub and gaming portfolio for JOYBOY showcasing gaming, video editing, and content creation.",
+        fr: "Portfolio gaming interactif et hub créateur pour JOYBOY réunissant gaming, montage vidéo et création de contenu.",
+      },
+      description: {
+        en: "A custom dark-themed creator portfolio built for JOYBOY's gaming and video editing brand. Features an animated preloader, HTML5 Canvas particle background, stylized display typography, preloaded WebP media assets, and a centralized social links hub.",
+        fr: "Un portfolio créateur au thème sombre conçu pour l'univers gaming et montage vidéo de JOYBOY. Il combine un écran de chargement animé, un arrière-plan de particules en Canvas HTML5, une typographie stylisée, des médias WebP optimisés et un hub de liens centralisé.",
+      },
+      highlights: {
+        en: [
+          "Interactive HTML5 Canvas particle background, animated preloader, and scroll-reveal motion",
+          "Performance-focused static build with preloaded WebP assets and clean metadata",
+          "Centralized creator hub dedicated to gaming, video editing, and content creation",
+        ],
+        fr: [
+          "Arrière-plan de particules en Canvas HTML5, préchargement animé et animations au défilement",
+          "Site statique optimisé avec médias WebP préchargés et métadonnées soignées",
+          "Hub créateur centralisé dédié au gaming, au montage vidéo et à la création de contenu",
+        ],
+      },
+      stack: ["HTML", "CSS", "JavaScript", "Canvas"],
+      visualType: "gaming-portfolio",
+      image: "",
+      liveUrl: "https://king-joyboy-dev.github.io/Joyboy/",
+      repoUrl: "",
+    },
   ],
 };

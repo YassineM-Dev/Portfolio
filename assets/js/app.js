@@ -286,6 +286,42 @@
       `;
     }
 
+    if (project.visualType === "gaming-portfolio") {
+      return `
+        <div class="preview-canvas" aria-hidden="true">
+          <div class="mock-window">
+            <div class="mock-topbar">
+              <div class="mock-dots"><span></span><span></span><span></span></div>
+              <span class="mock-path">joyboy / creator-hub</span>
+            </div>
+            <div class="gp-stage">
+              <div class="gp-header">
+                <div class="gp-avatar mono">JB</div>
+                <div class="gp-identity">
+                  <span class="gp-name">JOYBOY</span>
+                  <span class="gp-roles mono">Gaming &middot; Editing &middot; Content</span>
+                </div>
+              </div>
+              <div class="gp-links">
+                <div class="gp-link-row">
+                  <span>Official Channels</span>
+                  <span class="gp-arrow mono">&nearr;</span>
+                </div>
+                <div class="gp-link-row is-subtle">
+                  <span>Edits &amp; Highlights</span>
+                  <span class="gp-arrow mono">&nearr;</span>
+                </div>
+              </div>
+              <div class="gp-footer">
+                <span>Canvas &middot; WebP</span>
+                <span class="edu-live-pill">Live</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
     return `
       <div class="preview-canvas" aria-hidden="true">
         <div class="mock-window">
