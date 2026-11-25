@@ -43,7 +43,7 @@
       "modal.stack": "Technologies",
       "modal.openLive": "Open Live Project",
       "modal.viewCode": "View on GitHub",
-      "modal.noLinks": "Project links can be added in data.js at any time.",
+      "modal.noLinks": "Project links can be added in assets/js/data.js at any time.",
     },
     fr: {
       "nav.projects": "Projets",
@@ -83,7 +83,7 @@
       "modal.stack": "Technologies",
       "modal.openLive": "Ouvrir le projet",
       "modal.viewCode": "Voir sur GitHub",
-      "modal.noLinks": "Les liens du projet peuvent être ajoutés dans data.js.",
+      "modal.noLinks": "Les liens du projet peuvent être ajoutés dans assets/js/data.js.",
     },
   };
 
