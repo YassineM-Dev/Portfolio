@@ -16,6 +16,7 @@ Minimalist, fast, zero-dependency developer portfolio showcasing Yassine's deskt
 ```text
 Portfolio/
 ├── index.html
+├── favicon.ico
 ├── .nojekyll
 ├── .gitignore
 ├── README.md
