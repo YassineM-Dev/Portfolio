@@ -1212,6 +1212,90 @@ textarea {
   color: var(--text-muted);
 }
 
+/* JOYBOY Routine Visual */
+.rt-stage {
+  flex: 1;
+  padding: 13px 15px 11px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.rt-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rt-row {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 7px 10px;
+  border-radius: 7px;
+  border: 1px solid var(--border);
+  background: var(--surface-subtle);
+  font-size: 11px;
+  color: var(--text);
+  transition: border-color 0.2s ease, transform 0.2s var(--ease);
+}
+
+.rt-row.is-active {
+  border-color: var(--highlight);
+  background: var(--highlight-soft);
+}
+
+.project-card:hover .rt-row.is-active {
+  transform: translateX(2px);
+}
+
+.rt-check {
+  width: 15px;
+  height: 15px;
+  border-radius: 4px;
+  background: var(--accent);
+  color: var(--accent-fg);
+  font-size: 9.5px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.rt-dot {
+  width: 15px;
+  height: 15px;
+  border-radius: 4px;
+  border: 1.5px solid var(--highlight);
+  flex-shrink: 0;
+}
+
+.rt-task {
+  flex: 1;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rt-time {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.rt-footer {
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
 /* Fallback Preview for Future Projects */
 .fallback-stage {
   flex: 1;

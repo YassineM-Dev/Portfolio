@@ -161,23 +161,23 @@ window.PORTFOLIO_DATA = {
       "image": "",
       "liveUrl": "",
       "repoUrl": "https://github.com/YassineM-Dev/algostudio",
-      "downloadUrl": "https://github.com/YassineM-Dev/algostudio/releases/latest/download/AlgoStudio-Setup.exe",
+      "downloadUrl": "https://drive.google.com/uc?export=download&id=1LS2QqYymgTQteLkzDPwDFVVR1UWyCwmr",
       "downloads": [
         {
           "label": "Windows Setup (.exe)",
-          "url": "https://github.com/YassineM-Dev/algostudio/releases/latest/download/AlgoStudio-Setup.exe"
+          "url": "https://drive.google.com/uc?export=download&id=1LS2QqYymgTQteLkzDPwDFVVR1UWyCwmr"
         },
         {
           "label": "Windows Portable (.exe)",
-          "url": "https://github.com/YassineM-Dev/algostudio/releases/latest/download/AlgoStudio-Portable.exe"
+          "url": "https://drive.google.com/uc?export=download&id=1fO7bjqbqjgDXvqbIFNht4BsuEGK6OkRl"
         },
         {
           "label": "Android (.apk)",
-          "url": "https://github.com/YassineM-Dev/algostudio/releases/latest/download/AlgoStudio-Android.apk"
+          "url": "https://drive.google.com/uc?export=download&id=1MMvKHEIcS0VwLRyh5gBip7vlqdQ9ktcz"
         },
         {
           "label": "iOS (.ipa)",
-          "url": "https://github.com/YassineM-Dev/algostudio/releases/latest/download/AlgoStudio-iOS.ipa"
+          "url": "https://drive.google.com/uc?export=download&id=1S-tNNrsUYp3QTgXfU-4Ih_W46kEWWzci"
         }
       ]
     },
@@ -225,11 +225,11 @@ window.PORTFOLIO_DATA = {
       "image": "",
       "liveUrl": "",
       "repoUrl": "https://github.com/YassineM-Dev/CompresseurApp",
-      "downloadUrl": "https://github.com/YassineM-Dev/CompresseurApp/releases/latest/download/Compresseur-Patch.exe",
+      "downloadUrl": "https://drive.google.com/uc?export=download&id=1OWiknfA1fnZrYQmmz8wkBWotPcDfSl7u",
       "downloads": [
         {
           "label": "Download Windows (.exe)",
-          "url": "https://github.com/YassineM-Dev/CompresseurApp/releases/latest/download/Compresseur-Patch.exe"
+          "url": "https://drive.google.com/uc?export=download&id=1OWiknfA1fnZrYQmmz8wkBWotPcDfSl7u"
         }
       ]
     },
@@ -324,6 +324,70 @@ window.PORTFOLIO_DATA = {
       "liveUrl": "https://king-joyboy-dev.github.io/Joyboy/",
       "repoUrl": "",
       "downloadUrl": ""
+    },
+    {
+      "id": "joyboy-routine",
+      "index": "05",
+      "title": "JOYBOY Routine",
+      "year": "2026",
+      "category": {
+        "key": "utility",
+        "en": "Utility",
+        "fr": "Utilitaire"
+      },
+      "status": {
+        "en": "Active",
+        "fr": "Actif"
+      },
+      "summary": {
+        "en": "Minimalist daily routine organizer for Windows, Android, and iOS featuring custom schedules, tasks, prayer tracker, study list, notes, and AR / FR / EN support.",
+        "fr": "Organisateur de routine quotidienne minimaliste pour Windows, Android et iOS avec programmes personnalisés, tâches, suivi des prières, études, notes et support AR / FR / EN."
+      },
+      "description": {
+        "en": "JOYBOY Routine is a clean, cross-platform daily organizer built for Windows (.NET 8 WPF), Android (.apk), and iOS (.ipa / PWA). It lets users build custom time-blocked schedules, track the 5 daily prayers, manage study revisions and personal notes, switch instantly between Arabic (RTL), French, and English, and display live activity on Discord Rich Presence.",
+        "fr": "JOYBOY Routine est un organisateur quotidien épuré disponible sur Windows (.NET 8 WPF), Android (.apk) et iOS (.ipa / PWA). Il permet de créer des programmes horaires personnalisés, suivre les 5 prières quotidiennes, gérer les révisions et les notes, basculer entre Arabe (RTL), Français et Anglais, et afficher son statut sur Discord Rich Presence."
+      },
+      "highlights": {
+        "en": [
+          "Custom daily schedule builder with start/end times, task checklist, study list, and personal notes",
+          "Dedicated 5 daily prayers tracker with custom adhkar and full AR (RTL) / FR / EN language switching",
+          "Native Windows (.exe) with Discord Rich Presence plus Android (.apk) and iOS (.ipa) builds"
+        ],
+        "fr": [
+          "Création de programmes horaires personnalisés avec tâches, liste d'études et notes personnelles",
+          "Suivi dédié des 5 prières quotidiennes et changement instantané AR (RTL) / FR / EN",
+          "Versions Windows (.exe) avec Discord Rich Presence, Android (.apk) et iOS (.ipa)"
+        ]
+      },
+      "stack": [
+        "C#",
+        ".NET 8",
+        "WPF",
+        "Android / iOS"
+      ],
+      "visualType": "routine",
+      "image": "",
+      "liveUrl": "",
+      "downloadUrl": "https://drive.google.com/uc?export=download&id=1helLf1qW47UjCiAsfR6Gkz7jpjyHGYIV",
+      "downloads": [
+        {
+          "label": "Windows (.exe)",
+          "url": "https://drive.google.com/uc?export=download&id=1helLf1qW47UjCiAsfR6Gkz7jpjyHGYIV"
+        },
+        {
+          "label": "Android (.apk)",
+          "url": "https://drive.google.com/uc?export=download&id=1qc8P98V-S5vkhNhqh43LwKMVyibE9mk8"
+        },
+        {
+          "label": "iOS (.ipa)",
+          "url": "https://drive.google.com/uc?export=download&id=11yzn8An_OywVRJgLXsN7gRf0vAjOInDa"
+        },
+        {
+          "label": "iOS Installer (.zip)",
+          "url": "https://drive.google.com/uc?export=download&id=1EYew47cxIT-6p27gh4Ub02R4W1RpQ_VQ"
+        }
+      ],
+      "repoUrl": ""
     }
   ]
 };

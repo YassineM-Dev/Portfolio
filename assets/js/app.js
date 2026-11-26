@@ -406,6 +406,42 @@
       `;
     }
 
+    if (project.visualType === "routine") {
+      return `
+        <div class="preview-canvas" aria-hidden="true">
+          <div class="mock-window">
+            <div class="mock-topbar">
+              <div class="mock-dots"><span></span><span></span><span></span></div>
+              <span class="mock-path">joyboy-routine / AR &middot; FR &middot; EN</span>
+            </div>
+            <div class="rt-stage">
+              <div class="rt-list">
+                <div class="rt-row is-done">
+                  <span class="rt-check">&#10003;</span>
+                  <span class="rt-task">Morning Study &amp; Revision</span>
+                  <span class="rt-time mono">07:30</span>
+                </div>
+                <div class="rt-row is-done">
+                  <span class="rt-check">&#10003;</span>
+                  <span class="rt-task">Daily Prayer Tracker</span>
+                  <span class="rt-time mono">5 / 5</span>
+                </div>
+                <div class="rt-row is-active">
+                  <span class="rt-dot"></span>
+                  <span class="rt-task">Dev &amp; Content Block</span>
+                  <span class="rt-time mono">18:00</span>
+                </div>
+              </div>
+              <div class="rt-footer">
+                <span>Windows &middot; Android &middot; iOS</span>
+                <span class="edu-live-pill">Ready</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
     return `
       <div class="preview-canvas" aria-hidden="true">
         <div class="mock-window">
