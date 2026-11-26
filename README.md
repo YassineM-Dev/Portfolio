@@ -16,6 +16,7 @@ Minimalist, fast, zero-dependency developer portfolio showcasing Yassine's deskt
 ```text
 Portfolio/
 ├── index.html
+├── reviews.html
 ├── favicon.ico
 ├── .nojekyll
 ├── .gitignore
@@ -26,7 +27,9 @@ Portfolio/
     │   └── styles.css
     └── js/
         ├── data.js
-        └── app.js
+        ├── reviews-store.js
+        ├── app.js
+        └── reviews.js
 ```
 
 ## Adding a Project
@@ -37,3 +40,4 @@ Edit `assets/js/data.js` and append a new entry to the `projects` array. The pro
 
 - Email: `yassinemami41@gmail.com`
 - GitHub: [github.com/YassineM-Dev](https://github.com/YassineM-Dev)
+- Instagram: [@yassinemami18](https://instagram.com/yassinemami18)

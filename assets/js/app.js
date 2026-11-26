@@ -9,6 +9,7 @@
       "nav.projects": "Projects",
       "nav.skills": "Skills",
       "nav.about": "About",
+      "nav.reviews": "Reviews",
       "nav.contact": "Contact",
       "hero.ctaProjects": "View Projects",
       "hero.ctaContact": "Get in Touch",
@@ -27,7 +28,27 @@
       "skills.langTitle": "Programming Languages",
       "about.kicker": "Background",
       "about.title": "About",
-      "about.stackKicker": "Tools & Stack",
+      "about.ownerKicker": "Founder",
+      "about.ownerTitle": "Owner Of",
+      "reviews.kicker": "Client Feedback",
+      "reviews.title": "Client Reviews",
+      "reviews.viewAll": "View All Reviews",
+      "reviews.formTitle": "Leave a Review",
+      "reviews.ratingLabel": "Rating (1 to 5 stars)",
+      "reviews.nameLabel": "Your Name",
+      "reviews.serviceLabel": "Service (optional)",
+      "reviews.commentLabel": "Your Review",
+      "reviews.namePlaceholder": "Your name",
+      "reviews.servicePlaceholder": "Web Dev, Video Editing, Store...",
+      "reviews.commentPlaceholder": "Share your experience...",
+      "reviews.submit": "Submit Review",
+      "reviews.error": "Please choose a rating (1–5 stars), enter your name, and write a review.",
+      "reviews.saved": "Review published.",
+      "reviews.seeAllLink": "View all reviews",
+      "reviews.reviewSingular": "review",
+      "reviews.reviewPlural": "reviews",
+      "reviews.latestLabel": "Latest review",
+      "reviews.empty": "No reviews yet — be the first to rate and share feedback.",
       "contact.kicker": "Contact",
       "contact.title": "Let's work together.",
       "contact.desc":
@@ -54,6 +75,7 @@
       "nav.projects": "Projets",
       "nav.skills": "Compétences",
       "nav.about": "À propos",
+      "nav.reviews": "Avis",
       "nav.contact": "Contact",
       "hero.ctaProjects": "Voir les projets",
       "hero.ctaContact": "Me contacter",
@@ -72,7 +94,27 @@
       "skills.langTitle": "Langages de Programmation",
       "about.kicker": "Parcours",
       "about.title": "À propos",
-      "about.stackKicker": "Outils & Stack",
+      "about.ownerKicker": "Fondateur",
+      "about.ownerTitle": "Propriétaire de",
+      "reviews.kicker": "Retours Clients",
+      "reviews.title": "Avis Clients",
+      "reviews.viewAll": "Voir les avis",
+      "reviews.formTitle": "Laisser un avis",
+      "reviews.ratingLabel": "Note (1 à 5 étoiles)",
+      "reviews.nameLabel": "Votre nom",
+      "reviews.serviceLabel": "Service (optionnel)",
+      "reviews.commentLabel": "Votre avis",
+      "reviews.namePlaceholder": "Votre nom",
+      "reviews.servicePlaceholder": "Dev Web, Montage, Store...",
+      "reviews.commentPlaceholder": "Partagez votre expérience...",
+      "reviews.submit": "Publier l'avis",
+      "reviews.error": "Veuillez choisir une note (1–5 étoiles), saisir votre nom et écrire un avis.",
+      "reviews.saved": "Avis publié.",
+      "reviews.seeAllLink": "Voir tous les avis",
+      "reviews.reviewSingular": "avis",
+      "reviews.reviewPlural": "avis",
+      "reviews.latestLabel": "Dernier avis",
+      "reviews.empty": "Aucun avis pour le moment — soyez le premier à laisser un retour.",
       "contact.kicker": "Contact",
       "contact.title": "Travaillons ensemble.",
       "contact.desc":
@@ -99,6 +141,8 @@
 
   let currentLang = getSavedLang();
   let activeCategory = "all";
+  let selectedRating = 0;
+  let hoveredRating = 0;
   let lastFocusedElement = null;
 
   const els = {
@@ -120,7 +164,20 @@
     languagesCount: document.getElementById("languages-count"),
     languagesGrid: document.getElementById("languages-grid"),
     aboutCopy: document.getElementById("about-copy"),
-    skillsList: document.getElementById("skills-list"),
+    ownerOfList: document.getElementById("owner-of-list"),
+    reviewsCountBadge: document.getElementById("reviews-count-badge"),
+    homeAvgScore: document.getElementById("home-avg-score"),
+    homeAvgStars: document.getElementById("home-avg-stars"),
+    homeTotalLabel: document.getElementById("home-total-label"),
+    homeRatingBreakdown: document.getElementById("home-rating-breakdown"),
+    latestReviewBox: document.getElementById("latest-review-box"),
+    reviewForm: document.getElementById("review-form"),
+    starPicker: document.getElementById("star-picker"),
+    reviewRatingReadout: document.getElementById("review-rating-readout"),
+    reviewName: document.getElementById("review-name"),
+    reviewService: document.getElementById("review-service"),
+    reviewComment: document.getElementById("review-comment"),
+    reviewStatus: document.getElementById("review-status"),
     contactEmail: document.getElementById("contact-email"),
     copyEmailBtn: document.getElementById("copy-email-btn"),
     copyEmailLabel: document.getElementById("copy-email-label"),
@@ -380,6 +437,9 @@
     els.inputName.placeholder = t("form.namePlaceholder");
     els.inputEmail.placeholder = t("form.emailPlaceholder");
     els.inputMessage.placeholder = t("form.messagePlaceholder");
+    if (els.reviewName) els.reviewName.placeholder = t("reviews.namePlaceholder");
+    if (els.reviewService) els.reviewService.placeholder = t("reviews.servicePlaceholder");
+    if (els.reviewComment) els.reviewComment.placeholder = t("reviews.commentPlaceholder");
 
     // About paragraphs
     const paragraphs = localized(p.about);
@@ -426,31 +486,101 @@
         .join("");
     }
 
-    // About Tools & Stack
-    els.skillsList.innerHTML = DATA.skills
-      .map(
-        (group) => `
-        <div class="skill-group">
-          <h3 class="skill-group-title">${escapeHtml(localized(group.group))}</h3>
-          <div class="tag-list">
-            ${group.items.map((item) => `<span class="tag">${escapeHtml(item)}</span>`).join("")}
-          </div>
-        </div>
-      `
-      )
-      .join("");
+    // Owner Of
+    if (els.ownerOfList && Array.isArray(DATA.ownerOf)) {
+      els.ownerOfList.innerHTML = DATA.ownerOf
+        .map(
+          (item) => `
+          <a class="owner-card" href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer">
+            <div class="owner-card-main">
+              <div class="owner-card-top">
+                <span class="owner-card-name">${escapeHtml(item.name)}</span>
+                <span class="owner-card-badge mono">${escapeHtml(item.badge)}</span>
+              </div>
+              <p class="owner-card-role">${escapeHtml(localized(item.role))}</p>
+            </div>
+            <span class="owner-card-arrow" aria-hidden="true">${arrowUpRightIcon()}</span>
+          </a>
+        `
+        )
+        .join("");
+    }
 
     // Social links
     els.socialLinks.innerHTML = p.links
       .map(
         (link) => `
-        <a class="social-link" href="${escapeHtml(link.url)}" target="_blank" rel="noopener noreferrer">
+        <a class="social-link social-pill" href="${escapeHtml(link.url)}" target="_blank" rel="noopener noreferrer">
           <span>${escapeHtml(link.label)}</span>
+          ${link.handle ? `<span class="social-handle mono">${escapeHtml(link.handle)}</span>` : ""}
           ${arrowUpRightIcon()}
         </a>
       `
       )
       .join("");
+  }
+
+  function updateStarPickerUI() {
+    if (!els.starPicker) return;
+    const displayValue = hoveredRating || selectedRating;
+    els.starPicker.querySelectorAll(".star-btn").forEach((btn) => {
+      const val = Number(btn.getAttribute("data-value"));
+      const isLit = val <= displayValue;
+      btn.classList.toggle("is-lit", isLit);
+      btn.setAttribute("aria-checked", val === selectedRating ? "true" : "false");
+    });
+    if (els.reviewRatingReadout) {
+      els.reviewRatingReadout.textContent = `${selectedRating} / 5`;
+    }
+  }
+
+  function renderReviewsSummary() {
+    const STORE = window.REVIEWS_STORE;
+    if (!STORE || !els.homeAvgScore) return;
+
+    const reviews = STORE.getAll();
+    const stats = STORE.getStats(reviews);
+
+    if (els.reviewsCountBadge) {
+      els.reviewsCountBadge.textContent = padCount(stats.count);
+    }
+    els.homeAvgScore.textContent = stats.count > 0 ? `${stats.average.toFixed(1)} / 5` : "—";
+    els.homeAvgStars.innerHTML = STORE.renderStars(stats.average, 16);
+    const word = stats.count === 1 ? t("reviews.reviewSingular") : t("reviews.reviewPlural");
+    els.homeTotalLabel.textContent = `${stats.count} ${word}`;
+
+    let barsHtml = "";
+    for (let star = 5; star >= 1; star--) {
+      const n = stats.breakdown[star] || 0;
+      const pct = stats.count > 0 ? Math.round((n / stats.count) * 100) : 0;
+      barsHtml += `
+        <div class="breakdown-row">
+          <span class="breakdown-star mono">${star} ${STORE.starIcon(true, 12)}</span>
+          <div class="breakdown-track">
+            <div class="breakdown-fill" style="width: ${pct}%"></div>
+          </div>
+          <span class="breakdown-count mono">${n}</span>
+        </div>
+      `;
+    }
+    els.homeRatingBreakdown.innerHTML = barsHtml;
+
+    if (reviews.length > 0) {
+      const latest = reviews[0];
+      els.latestReviewBox.innerHTML = `
+        <div class="latest-review-head">
+          <span class="mono latest-review-kicker">${escapeHtml(t("reviews.latestLabel"))}</span>
+          ${STORE.renderStars(latest.rating, 13)}
+        </div>
+        <p class="latest-review-text">&ldquo;${escapeHtml(latest.comment)}&rdquo;</p>
+        <div class="latest-review-author mono">
+          <span>${escapeHtml(latest.name)}</span>
+          ${latest.service ? `<span>&middot; ${escapeHtml(latest.service)}</span>` : ""}
+        </div>
+      `;
+    } else {
+      els.latestReviewBox.innerHTML = `<p class="latest-review-empty">${escapeHtml(t("reviews.empty"))}</p>`;
+    }
   }
 
   function getCategories() {
@@ -708,6 +838,67 @@
       els.formStatus.className = "form-status is-success";
       els.contactForm.reset();
     });
+
+    // Interactive 1-5 star review picker
+    if (els.starPicker) {
+      els.starPicker.addEventListener("mouseover", (event) => {
+        const btn = event.target.closest(".star-btn");
+        if (!btn) return;
+        hoveredRating = Number(btn.getAttribute("data-value")) || 0;
+        updateStarPickerUI();
+      });
+
+      els.starPicker.addEventListener("mouseleave", () => {
+        hoveredRating = 0;
+        updateStarPickerUI();
+      });
+
+      els.starPicker.addEventListener("click", (event) => {
+        const btn = event.target.closest(".star-btn");
+        if (!btn) return;
+        selectedRating = Number(btn.getAttribute("data-value")) || 0;
+        hoveredRating = 0;
+        updateStarPickerUI();
+      });
+    }
+
+    // Client review submission
+    if (els.reviewForm && window.REVIEWS_STORE) {
+      els.reviewForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const name = els.reviewName.value.trim();
+        const service = els.reviewService.value.trim();
+        const comment = els.reviewComment.value.trim();
+
+        if (!name || !comment || !(selectedRating >= 1 && selectedRating <= 5)) {
+          els.reviewStatus.textContent = t("reviews.error");
+          els.reviewStatus.className = "form-status is-error";
+          return;
+        }
+
+        const saved = window.REVIEWS_STORE.add({
+          name: name,
+          service: service,
+          rating: selectedRating,
+          comment: comment,
+        });
+
+        if (!saved) {
+          els.reviewStatus.textContent = t("reviews.error");
+          els.reviewStatus.className = "form-status is-error";
+          return;
+        }
+
+        els.reviewForm.reset();
+        selectedRating = 0;
+        hoveredRating = 0;
+        updateStarPickerUI();
+        renderReviewsSummary();
+
+        els.reviewStatus.className = "form-status is-success";
+        els.reviewStatus.innerHTML = `${escapeHtml(t("reviews.saved"))} <a class="inline-review-link" href="reviews.html">${escapeHtml(t("reviews.seeAllLink"))} &rarr;</a>`;
+      });
+    }
   }
 
   function setupRevealAndScrollSpy() {
@@ -730,7 +921,7 @@
     }
 
     const navLinks = document.querySelectorAll(".nav-link");
-    const sections = ["projects", "skills", "about", "contact"]
+    const sections = ["projects", "skills", "about", "reviews", "contact"]
       .map((id) => document.getElementById(id))
       .filter(Boolean);
 
@@ -803,6 +994,8 @@
     renderProfile();
     renderFilters();
     renderProjects();
+    renderReviewsSummary();
+    updateStarPickerUI();
   }
 
   renderAll();

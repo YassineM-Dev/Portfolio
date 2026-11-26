@@ -49,6 +49,7 @@
         <a href="#projects" class="nav-link" data-i18n="nav.projects">Projects</a>
         <a href="#skills" class="nav-link" data-i18n="nav.skills">Skills</a>
         <a href="#about" class="nav-link" data-i18n="nav.about">About</a>
+        <a href="#reviews" class="nav-link" data-i18n="nav.reviews">Reviews</a>
         <a href="#contact" class="nav-link" data-i18n="nav.contact">Contact</a>
       </nav>
 
@@ -186,12 +187,115 @@
             </div>
           </div>
 
-          <div class="skills-panel reveal">
-            <span class="section-kicker mono" data-i18n="about.stackKicker">Tools &amp; Stack</span>
-            <div class="skills-list" id="skills-list">
+          <div class="owner-panel reveal">
+            <span class="section-kicker mono" data-i18n="about.ownerKicker">Founder</span>
+            <h3 class="owner-panel-title" data-i18n="about.ownerTitle">Owner Of</h3>
+            <div class="owner-list" id="owner-of-list">
               <!-- Rendered dynamically from data.js -->
             </div>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Client Reviews -->
+    <section class="section section-bordered" id="reviews">
+      <div class="container">
+        <div class="section-header reveal">
+          <div>
+            <span class="section-kicker mono" data-i18n="reviews.kicker">Client Feedback</span>
+            <h2 class="section-title">
+              <span data-i18n="reviews.title">Client Reviews</span>
+              <span class="count-badge mono" id="reviews-count-badge">00</span>
+            </h2>
+          </div>
+
+          <a href="reviews.html" class="btn btn-secondary">
+            <span data-i18n="reviews.viewAll">View All Reviews</span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 12h14"></path>
+              <path d="m12 5 7 7-7 7"></path>
+            </svg>
+          </a>
+        </div>
+
+        <div class="reviews-layout">
+          <div class="reviews-summary-card reveal">
+            <div class="reviews-score-row">
+              <div>
+                <div class="overview-score mono" id="home-avg-score">—</div>
+                <div id="home-avg-stars"></div>
+                <p class="overview-meta mono" id="home-total-label">0 reviews</p>
+              </div>
+              <span class="badge-outline mono">1 – 5</span>
+            </div>
+
+            <div class="rating-breakdown" id="home-rating-breakdown">
+              <!-- Rendered dynamically -->
+            </div>
+
+            <div class="latest-review-box" id="latest-review-box">
+              <!-- Rendered dynamically -->
+            </div>
+
+            <a href="reviews.html" class="btn btn-primary reviews-all-cta">
+              <span data-i18n="reviews.viewAll">View All Reviews</span>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 12h14"></path>
+                <path d="m12 5 7 7-7 7"></path>
+              </svg>
+            </a>
+          </div>
+
+          <form class="contact-form review-form-card reveal" id="review-form" novalidate>
+            <div class="review-form-head">
+              <h3 class="skill-card-title" data-i18n="reviews.formTitle">Leave a Review</h3>
+              <span class="mono review-rating-readout" id="review-rating-readout">0 / 5</span>
+            </div>
+
+            <div class="form-field">
+              <span class="field-label" data-i18n="reviews.ratingLabel">Rating (1 to 5 stars)</span>
+              <div class="star-picker" id="star-picker" role="radiogroup" aria-label="Rating from 1 to 5 stars">
+                <button type="button" class="star-btn" data-value="1" role="radio" aria-checked="false" aria-label="1 star">
+                  <svg class="star-svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                </button>
+                <button type="button" class="star-btn" data-value="2" role="radio" aria-checked="false" aria-label="2 stars">
+                  <svg class="star-svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                </button>
+                <button type="button" class="star-btn" data-value="3" role="radio" aria-checked="false" aria-label="3 stars">
+                  <svg class="star-svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                </button>
+                <button type="button" class="star-btn" data-value="4" role="radio" aria-checked="false" aria-label="4 stars">
+                  <svg class="star-svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                </button>
+                <button type="button" class="star-btn" data-value="5" role="radio" aria-checked="false" aria-label="5 stars">
+                  <svg class="star-svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="review-form-row">
+              <div class="form-field">
+                <label for="review-name" data-i18n="reviews.nameLabel">Your Name</label>
+                <input type="text" id="review-name" name="name" required placeholder="Your name" />
+              </div>
+
+              <div class="form-field">
+                <label for="review-service" data-i18n="reviews.serviceLabel">Service (optional)</label>
+                <input type="text" id="review-service" name="service" placeholder="Web Dev, Video Editing, Store..." />
+              </div>
+            </div>
+
+            <div class="form-field">
+              <label for="review-comment" data-i18n="reviews.commentLabel">Your Review</label>
+              <textarea id="review-comment" name="comment" rows="3" required placeholder="Share your experience..."></textarea>
+            </div>
+
+            <div class="form-footer">
+              <button type="submit" class="btn btn-primary" data-i18n="reviews.submit">Submit Review</button>
+              <p class="form-status" id="review-status" role="status" aria-live="polite"></p>
+            </div>
+          </form>
         </div>
       </div>
     </section>
@@ -307,6 +411,7 @@
   </div>
 
   <script src="assets/js/data.js" defer></script>
+  <script src="assets/js/reviews-store.js" defer></script>
   <script src="assets/js/app.js" defer></script>
 </body>
 </html>

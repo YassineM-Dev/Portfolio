@@ -2,7 +2,7 @@
  * Portfolio Data Configuration — Yassine
  *
  * Add a new project by appending an object to the `projects` array.
- * The grid, counter, category filters, and detail modal update automatically.
+ * Add permanent client reviews to the `reviews` array (rating 1–5).
  */
 
 window.PORTFOLIO_DATA = {
@@ -45,9 +45,31 @@ window.PORTFOLIO_DATA = {
       ],
     },
     links: [
-      { label: "GitHub", url: "https://github.com/YassineM-Dev" },
+      { label: "GitHub", handle: "YassineM-Dev", url: "https://github.com/YassineM-Dev" },
+      { label: "Instagram", handle: "@yassinemami18", url: "https://instagram.com/yassinemami18" },
     ],
   },
+
+  ownerOf: [
+    {
+      name: "Joyboy Store",
+      role: {
+        en: "Digital Store — Presets, Packs, Diamonds & Nitro",
+        fr: "Boutique Numérique — Presets, Packs, Diamants & Nitro",
+      },
+      badge: "Store",
+      url: "https://king-joyboy-dev.github.io/Joyboy/Store/index.html",
+    },
+    {
+      name: "Joyboy Instagram",
+      role: {
+        en: "@joyboy_120fps — Gaming, Editing & Content Creation",
+        fr: "@joyboy_120fps — Gaming, Montage & Création de Contenu",
+      },
+      badge: "Instagram",
+      url: "https://instagram.com/joyboy_120fps",
+    },
+  ],
 
   coreSkills: [
     {
@@ -81,27 +103,14 @@ window.PORTFOLIO_DATA = {
     "SQL",
   ],
 
-  skills: [
-    {
-      group: { en: "Frameworks & UI", fr: "Frameworks & UI" },
-      items: ["React", "Electron", "Monaco Editor", "Windows Forms"],
-    },
-    {
-      group: { en: "Tools & Systems", fr: "Outils & Systèmes" },
-      items: ["FFmpeg", "Vite", "Git & GitHub", "Desktop Packaging"],
-    },
-    {
-      group: { en: "Creative & Digital", fr: "Création & Digital" },
-      items: ["Video Editing", "Content Strategy", "Social Media"],
-    },
-  ],
-
   /**
-   * Projects List
-   * - image: optional screenshot path (leave "" to use the custom preview).
-   * - liveUrl: optional live site URL.
-   * - repoUrl: optional GitHub repository URL.
+   * Permanent Client Reviews
+   * Format: { id, name, service, rating (1-5), comment, date ("YYYY-MM-DD") }
+   * Visitor reviews submitted through the form are also saved in localStorage
+   * and displayed automatically on reviews.html.
    */
+  reviews: [],
+
   projects: [
     {
       id: "algostudio",
