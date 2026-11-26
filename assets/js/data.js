@@ -132,8 +132,8 @@ window.PORTFOLIO_DATA = {
         "fr": "Actif"
       },
       "summary": {
-        "en": "Windows desktop IDE for writing and executing algorithmic pseudocode with automatic TDO, execution trace, and built-in Bac Informatique resources.",
-        "fr": "IDE bureau Windows pour écrire et exécuter des algorithmes en pseudocode avec TDO automatique, trace d'exécution et ressources Bac Informatique intégrées."
+        "en": "Cross-platform IDE (Windows, Android & iOS) for writing and executing algorithmic pseudocode with automatic TDO, execution trace, and built-in Bac Informatique resources.",
+        "fr": "IDE multiplateforme (Windows, Android & iOS) pour écrire et exécuter des algorithmes en pseudocode avec TDO automatique, trace d'exécution et ressources Bac Informatique intégrées."
       },
       "description": {
         "en": "AlgoStudio is a Windows desktop IDE built for algorithmics and Tunisian Bac Informatique students. Powered by Monaco Editor, React, and Electron, it runs pseudocode in real time, automatically generates variable tables (TDO) and execution traces, and bundles a 12-chapter algorithmics guide, 27 standard modules, and a 2008–2026 past exams archive with auto-updating Windows releases.",
@@ -160,7 +160,26 @@ window.PORTFOLIO_DATA = {
       "visualType": "algostudio",
       "image": "",
       "liveUrl": "",
-      "repoUrl": "https://github.com/YassineM-Dev/algostudio"
+      "repoUrl": "https://github.com/YassineM-Dev/algostudio",
+      "downloadUrl": "https://github.com/YassineM-Dev/algostudio/releases/latest/download/AlgoStudio-Setup.exe",
+      "downloads": [
+        {
+          "label": "Windows Setup (.exe)",
+          "url": "https://github.com/YassineM-Dev/algostudio/releases/latest/download/AlgoStudio-Setup.exe"
+        },
+        {
+          "label": "Windows Portable (.exe)",
+          "url": "https://github.com/YassineM-Dev/algostudio/releases/latest/download/AlgoStudio-Portable.exe"
+        },
+        {
+          "label": "Android (.apk)",
+          "url": "https://github.com/YassineM-Dev/algostudio/releases/latest/download/AlgoStudio-Android.apk"
+        },
+        {
+          "label": "iOS (.ipa)",
+          "url": "https://github.com/YassineM-Dev/algostudio/releases/latest/download/AlgoStudio-iOS.ipa"
+        }
+      ]
     },
     {
       "id": "compresseur-app",
@@ -205,7 +224,14 @@ window.PORTFOLIO_DATA = {
       "visualType": "compresseur",
       "image": "",
       "liveUrl": "",
-      "repoUrl": "https://github.com/YassineM-Dev/CompresseurApp"
+      "repoUrl": "https://github.com/YassineM-Dev/CompresseurApp",
+      "downloadUrl": "https://github.com/YassineM-Dev/CompresseurApp/releases/latest/download/Compresseur-Patch.exe",
+      "downloads": [
+        {
+          "label": "Download Windows (.exe)",
+          "url": "https://github.com/YassineM-Dev/CompresseurApp/releases/latest/download/Compresseur-Patch.exe"
+        }
+      ]
     },
     {
       "id": "bac-for-all",
@@ -250,7 +276,8 @@ window.PORTFOLIO_DATA = {
       "visualType": "bac-sheet",
       "image": "",
       "liveUrl": "https://yassinem-dev.github.io/Bac-For-All/",
-      "repoUrl": "https://github.com/YassineM-Dev/Bac-For-All"
+      "repoUrl": "https://github.com/YassineM-Dev/Bac-For-All",
+      "downloadUrl": ""
     },
     {
       "id": "gaming-portfolio",
@@ -295,7 +322,8 @@ window.PORTFOLIO_DATA = {
       "visualType": "gaming-portfolio",
       "image": "",
       "liveUrl": "https://king-joyboy-dev.github.io/Joyboy/",
-      "repoUrl": ""
+      "repoUrl": "",
+      "downloadUrl": ""
     }
   ]
 };

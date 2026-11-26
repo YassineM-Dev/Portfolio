@@ -21,6 +21,7 @@
       "projects.all": "All",
       "projects.details": "View details",
       "projects.live": "Live",
+      "projects.download": "Download",
       "projects.code": "GitHub",
       "skills.kicker": "Expertise",
       "skills.title": "Skills & Languages",
@@ -68,6 +69,7 @@
       "modal.highlights": "Key Highlights",
       "modal.stack": "Technologies",
       "modal.openLive": "Open Live Project",
+      "modal.download": "Download App",
       "modal.viewCode": "View on GitHub",
       "modal.noLinks": "Project links can be added in assets/js/data.js at any time.",
     },
@@ -87,6 +89,7 @@
       "projects.all": "Tous",
       "projects.details": "Voir les détails",
       "projects.live": "Aperçu",
+      "projects.download": "Télécharger",
       "projects.code": "GitHub",
       "skills.kicker": "Savoir-faire",
       "skills.title": "Compétences & Langages",
@@ -134,6 +137,7 @@
       "modal.highlights": "Points clés",
       "modal.stack": "Technologies",
       "modal.openLive": "Ouvrir le projet",
+      "modal.download": "Télécharger l'app",
       "modal.viewCode": "Voir sur GitHub",
       "modal.noLinks": "Les liens du projet peuvent être ajoutés dans assets/js/data.js.",
     },
@@ -246,6 +250,10 @@
 
   function arrowRightIcon() {
     return `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>`;
+  }
+
+  function downloadIcon() {
+    return `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>`;
   }
 
   function renderProjectPreview(project) {
@@ -634,6 +642,11 @@
     els.projectsGrid.innerHTML = filtered
       .map((project) => {
         const extLinks = [];
+        if (project.downloadUrl) {
+          extLinks.push(
+            `<a class="ext-link ext-link-download" href="${escapeHtml(project.downloadUrl)}" rel="noopener noreferrer">${downloadIcon()} <span>${escapeHtml(t("projects.download"))}</span></a>`
+          );
+        }
         if (project.liveUrl) {
           extLinks.push(
             `<a class="ext-link" href="${escapeHtml(project.liveUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(t("projects.live"))} ${arrowUpRightIcon()}</a>`
@@ -772,9 +785,22 @@
       .join("");
 
     const actions = [];
+    if (Array.isArray(project.downloads) && project.downloads.length > 0) {
+      project.downloads.forEach((dl, idx) => {
+        if (!dl || !dl.url) return;
+        const cls = idx === 0 ? "btn btn-primary" : "btn btn-secondary";
+        actions.push(
+          `<a class="${cls}" href="${escapeHtml(dl.url)}" rel="noopener noreferrer">${downloadIcon()} <span>${escapeHtml(dl.label || t("modal.download"))}</span></a>`
+        );
+      });
+    } else if (project.downloadUrl) {
+      actions.push(
+        `<a class="btn btn-primary" href="${escapeHtml(project.downloadUrl)}" rel="noopener noreferrer">${downloadIcon()} <span>${escapeHtml(t("modal.download"))}</span></a>`
+      );
+    }
     if (project.liveUrl) {
       actions.push(
-        `<a class="btn btn-primary" href="${escapeHtml(project.liveUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(t("modal.openLive"))} ${arrowUpRightIcon()}</a>`
+        `<a class="btn ${actions.length ? "btn-secondary" : "btn-primary"}" href="${escapeHtml(project.liveUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(t("modal.openLive"))} ${arrowUpRightIcon()}</a>`
       );
     }
     if (project.repoUrl) {
