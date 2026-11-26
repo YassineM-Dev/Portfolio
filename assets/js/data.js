@@ -1,6 +1,5 @@
 /**
  * Portfolio Data Configuration — Yassine
- * Managed cleanly by hand or via YassineControlPanel.exe.
  */
 window.PORTFOLIO_DATA = {
   "profile": {
