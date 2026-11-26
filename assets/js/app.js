@@ -159,6 +159,11 @@
     projectsCount: document.getElementById("projects-count"),
     projectFilters: document.getElementById("project-filters"),
     projectsGrid: document.getElementById("projects-grid"),
+    sliderControls: document.getElementById("slider-controls"),
+    sliderIndicator: document.getElementById("slider-indicator"),
+    sliderDots: document.getElementById("slider-dots"),
+    sliderPrev: document.getElementById("slider-prev"),
+    sliderNext: document.getElementById("slider-next"),
     coreSkillsCount: document.getElementById("core-skills-count"),
     coreSkillsList: document.getElementById("core-skills-list"),
     languagesCount: document.getElementById("languages-count"),
@@ -679,6 +684,67 @@
         `;
       })
       .join("");
+
+    els.projectsGrid.scrollTo({ left: 0, behavior: "auto" });
+    updateSliderUI(0);
+  }
+
+  function getSliderMetrics() {
+    const cards = els.projectsGrid ? els.projectsGrid.querySelectorAll(".project-card") : [];
+    const total = cards.length;
+    const visible = window.innerWidth <= 860 ? 1 : 2;
+    const maxIndex = Math.max(0, total - visible);
+    let stepWidth = 0;
+    if (cards.length > 0) {
+      const style = window.getComputedStyle(els.projectsGrid);
+      const gap = parseFloat(style.columnGap || style.gap) || 24;
+      stepWidth = cards[0].getBoundingClientRect().width + gap;
+    }
+    return { total, visible, maxIndex, stepWidth };
+  }
+
+  function getCurrentSlideIndex() {
+    const { maxIndex, stepWidth } = getSliderMetrics();
+    if (!stepWidth || maxIndex === 0) return 0;
+    return Math.min(maxIndex, Math.max(0, Math.round(els.projectsGrid.scrollLeft / stepWidth)));
+  }
+
+  function goToSlide(index) {
+    const { maxIndex, stepWidth } = getSliderMetrics();
+    const clamped = Math.min(maxIndex, Math.max(0, index));
+    if (stepWidth > 0) {
+      els.projectsGrid.scrollTo({ left: clamped * stepWidth, behavior: "smooth" });
+    }
+    updateSliderUI(clamped);
+  }
+
+  function updateSliderUI(forcedIndex) {
+    if (!els.sliderControls) return;
+    const { total, visible, maxIndex } = getSliderMetrics();
+    const activeIndex = typeof forcedIndex === "number" ? forcedIndex : getCurrentSlideIndex();
+
+    if (total === 0) {
+      els.sliderControls.hidden = true;
+      return;
+    }
+    els.sliderControls.hidden = false;
+
+    const firstShown = activeIndex + 1;
+    const lastShown = Math.min(total, activeIndex + visible);
+    els.sliderIndicator.textContent =
+      firstShown === lastShown
+        ? `${padCount(firstShown)} / ${padCount(total)}`
+        : `${padCount(firstShown)}–${padCount(lastShown)} / ${padCount(total)}`;
+
+    const dotCount = maxIndex + 1;
+    let dotsHtml = "";
+    for (let i = 0; i < dotCount; i++) {
+      dotsHtml += `<button type="button" class="slider-dot ${i === activeIndex ? "is-active" : ""}" data-slide="${i}" role="tab" aria-selected="${i === activeIndex ? "true" : "false"}" aria-label="Slide ${i + 1}"></button>`;
+    }
+    els.sliderDots.innerHTML = dotsHtml;
+
+    els.sliderPrev.disabled = activeIndex <= 0;
+    els.sliderNext.disabled = activeIndex >= maxIndex;
   }
 
   function openModal(projectId) {
@@ -754,6 +820,54 @@
       renderFilters();
       renderProjects();
     });
+
+    // Projects slider navigation
+    if (els.sliderPrev && els.sliderNext && els.sliderDots && els.projectsGrid) {
+      els.sliderPrev.addEventListener("click", () => {
+        goToSlide(getCurrentSlideIndex() - 1);
+      });
+
+      els.sliderNext.addEventListener("click", () => {
+        goToSlide(getCurrentSlideIndex() + 1);
+      });
+
+      els.sliderDots.addEventListener("click", (event) => {
+        const dot = event.target.closest(".slider-dot");
+        if (!dot) return;
+        goToSlide(Number(dot.getAttribute("data-slide")) || 0);
+      });
+
+      let scrollRaf = null;
+      els.projectsGrid.addEventListener(
+        "scroll",
+        () => {
+          if (scrollRaf) return;
+          scrollRaf = requestAnimationFrame(() => {
+            updateSliderUI();
+            scrollRaf = null;
+          });
+        },
+        { passive: true }
+      );
+
+      els.projectsGrid.addEventListener("keydown", (event) => {
+        if (event.key === "ArrowRight") {
+          event.preventDefault();
+          goToSlide(getCurrentSlideIndex() + 1);
+        } else if (event.key === "ArrowLeft") {
+          event.preventDefault();
+          goToSlide(getCurrentSlideIndex() - 1);
+        }
+      });
+
+      window.addEventListener(
+        "resize",
+        () => {
+          updateSliderUI();
+        },
+        { passive: true }
+      );
+    }
 
     // Open project modal
     els.projectsGrid.addEventListener("click", (event) => {
