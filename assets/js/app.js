@@ -22,6 +22,8 @@
       "projects.details": "View details",
       "projects.live": "Live",
       "projects.download": "Download",
+      "projects.downloadInstaller": "Download Installer (.exe)",
+      "projects.visitLive": "Open Live Site",
       "projects.code": "GitHub",
       "skills.kicker": "Expertise",
       "skills.title": "Skills & Languages",
@@ -90,6 +92,8 @@
       "projects.details": "Voir les détails",
       "projects.live": "Aperçu",
       "projects.download": "Télécharger",
+      "projects.downloadInstaller": "Télécharger l'installeur (.exe)",
+      "projects.visitLive": "Ouvrir le site",
       "projects.code": "GitHub",
       "skills.kicker": "Savoir-faire",
       "skills.title": "Compétences & Langages",
@@ -678,20 +682,27 @@
     els.projectsGrid.innerHTML = filtered
       .map((project) => {
         const extLinks = [];
-        if (project.downloadUrl) {
-          extLinks.push(
-            `<a class="ext-link ext-link-download" href="${escapeHtml(project.downloadUrl)}" rel="noopener noreferrer">${downloadIcon()} <span>${escapeHtml(t("projects.download"))}</span></a>`
-          );
-        }
-        if (project.liveUrl) {
-          extLinks.push(
-            `<a class="ext-link" href="${escapeHtml(project.liveUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(t("projects.live"))} ${arrowUpRightIcon()}</a>`
-          );
-        }
         if (project.repoUrl) {
           extLinks.push(
             `<a class="ext-link" href="${escapeHtml(project.repoUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(t("projects.code"))} ${arrowUpRightIcon()}</a>`
           );
+        }
+
+        let primaryCta = "";
+        if (project.downloadUrl) {
+          primaryCta = `
+            <a class="btn btn-primary card-cta-btn" href="${escapeHtml(project.downloadUrl)}" download rel="noopener noreferrer">
+              ${downloadIcon()}
+              <span>${escapeHtml(t("projects.downloadInstaller"))}</span>
+            </a>
+          `;
+        } else if (project.liveUrl) {
+          primaryCta = `
+            <a class="btn btn-secondary card-cta-btn" href="${escapeHtml(project.liveUrl)}" target="_blank" rel="noopener noreferrer">
+              <span>${escapeHtml(t("projects.visitLive"))}</span>
+              ${arrowUpRightIcon()}
+            </a>
+          `;
         }
 
         return `
@@ -720,6 +731,8 @@
               <div class="tag-list">
                 ${project.stack.map((tech) => `<span class="tag">${escapeHtml(tech)}</span>`).join("")}
               </div>
+
+              ${primaryCta ? `<div class="card-cta-wrap">${primaryCta}</div>` : ""}
 
               <div class="card-footer">
                 <button type="button" class="card-action-link" data-open-modal="${escapeHtml(project.id)}">

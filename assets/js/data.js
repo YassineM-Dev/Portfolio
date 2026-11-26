@@ -161,23 +161,23 @@ window.PORTFOLIO_DATA = {
       "image": "",
       "liveUrl": "",
       "repoUrl": "https://github.com/YassineM-Dev/algostudio",
-      "downloadUrl": "https://drive.google.com/uc?export=download&id=1LS2QqYymgTQteLkzDPwDFVVR1UWyCwmr",
+      "downloadUrl": "https://drive.usercontent.google.com/download?id=1LS2QqYymgTQteLkzDPwDFVVR1UWyCwmr&export=download&confirm=t",
       "downloads": [
         {
           "label": "Windows Setup (.exe)",
-          "url": "https://drive.google.com/uc?export=download&id=1LS2QqYymgTQteLkzDPwDFVVR1UWyCwmr"
+          "url": "https://drive.usercontent.google.com/download?id=1LS2QqYymgTQteLkzDPwDFVVR1UWyCwmr&export=download&confirm=t"
         },
         {
           "label": "Windows Portable (.exe)",
-          "url": "https://drive.google.com/uc?export=download&id=1fO7bjqbqjgDXvqbIFNht4BsuEGK6OkRl"
+          "url": "https://github.com/YassineM-Dev/algostudio/releases/latest/download/AlgoStudio-Portable.exe"
         },
         {
           "label": "Android (.apk)",
-          "url": "https://drive.google.com/uc?export=download&id=1MMvKHEIcS0VwLRyh5gBip7vlqdQ9ktcz"
+          "url": "https://github.com/YassineM-Dev/algostudio/releases/latest/download/AlgoStudio-Android.apk"
         },
         {
           "label": "iOS (.ipa)",
-          "url": "https://drive.google.com/uc?export=download&id=1S-tNNrsUYp3QTgXfU-4Ih_W46kEWWzci"
+          "url": "https://github.com/YassineM-Dev/algostudio/releases/latest/download/AlgoStudio-iOS.ipa"
         }
       ]
     },
@@ -225,11 +225,11 @@ window.PORTFOLIO_DATA = {
       "image": "",
       "liveUrl": "",
       "repoUrl": "https://github.com/YassineM-Dev/CompresseurApp",
-      "downloadUrl": "https://drive.google.com/uc?export=download&id=1OWiknfA1fnZrYQmmz8wkBWotPcDfSl7u",
+      "downloadUrl": "https://github.com/YassineM-Dev/CompresseurApp/releases/latest/download/Compresseur-Patch.exe",
       "downloads": [
         {
           "label": "Download Windows (.exe)",
-          "url": "https://drive.google.com/uc?export=download&id=1OWiknfA1fnZrYQmmz8wkBWotPcDfSl7u"
+          "url": "https://github.com/YassineM-Dev/CompresseurApp/releases/latest/download/Compresseur-Patch.exe"
         }
       ]
     },
@@ -368,23 +368,23 @@ window.PORTFOLIO_DATA = {
       "visualType": "routine",
       "image": "",
       "liveUrl": "",
-      "downloadUrl": "https://drive.google.com/uc?export=download&id=1helLf1qW47UjCiAsfR6Gkz7jpjyHGYIV",
+      "downloadUrl": "https://drive.usercontent.google.com/download?id=1helLf1qW47UjCiAsfR6Gkz7jpjyHGYIV&export=download&confirm=t",
       "downloads": [
         {
           "label": "Windows (.exe)",
-          "url": "https://drive.google.com/uc?export=download&id=1helLf1qW47UjCiAsfR6Gkz7jpjyHGYIV"
+          "url": "https://drive.usercontent.google.com/download?id=1helLf1qW47UjCiAsfR6Gkz7jpjyHGYIV&export=download&confirm=t"
         },
         {
           "label": "Android (.apk)",
-          "url": "https://drive.google.com/uc?export=download&id=1qc8P98V-S5vkhNhqh43LwKMVyibE9mk8"
+          "url": "https://drive.usercontent.google.com/download?id=1qc8P98V-S5vkhNhqh43LwKMVyibE9mk8&export=download&confirm=t"
         },
         {
           "label": "iOS (.ipa)",
-          "url": "https://drive.google.com/uc?export=download&id=11yzn8An_OywVRJgLXsN7gRf0vAjOInDa"
+          "url": "https://drive.usercontent.google.com/download?id=11yzn8An_OywVRJgLXsN7gRf0vAjOInDa&export=download&confirm=t"
         },
         {
           "label": "iOS Installer (.zip)",
-          "url": "https://drive.google.com/uc?export=download&id=1EYew47cxIT-6p27gh4Ub02R4W1RpQ_VQ"
+          "url": "https://drive.usercontent.google.com/download?id=1EYew47cxIT-6p27gh4Ub02R4W1RpQ_VQ&export=download&confirm=t"
         }
       ],
       "repoUrl": ""
