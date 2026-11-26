@@ -11,3 +11,6 @@ desktop.ini
 # Dependencies & logs
 node_modules/
 *.log
+
+# Desktop Control Panel (kept local, excluded from GitHub Pages site)
+control-panel/
