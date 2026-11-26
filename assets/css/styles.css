@@ -524,16 +524,56 @@ textarea {
   position: relative;
 }
 
+.projects-viewport {
+  position: relative;
+}
+
+.projects-viewport::before,
+.projects-viewport::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 14px;
+  width: 34px;
+  pointer-events: none;
+  z-index: 4;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.projects-viewport::before {
+  left: -2px;
+  background: linear-gradient(to right, var(--bg), transparent);
+}
+
+.projects-viewport::after {
+  right: -2px;
+  background: linear-gradient(to left, var(--bg), transparent);
+}
+
+.projects-viewport.has-left-fade::before,
+.projects-viewport.has-right-fade::after {
+  opacity: 1;
+}
+
 .projects-grid {
   display: flex;
   gap: 24px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
-  padding: 6px 2px 14px;
-  margin: -6px -2px 0;
+  padding: 8px 2px 16px;
+  margin: -8px -2px 0;
+  cursor: grab;
   scrollbar-width: none;
   -ms-overflow-style: none;
+}
+
+.projects-grid.is-dragging {
+  cursor: grabbing;
+  scroll-snap-type: none;
+  scroll-behavior: auto;
+  user-select: none;
 }
 
 .projects-grid::-webkit-scrollbar {
@@ -559,10 +599,33 @@ textarea {
   gap: 16px;
 }
 
+.slider-meta-col {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 140px;
+}
+
 .slider-indicator {
   font-size: 12px;
   color: var(--text-muted);
-  min-width: 78px;
+  white-space: nowrap;
+}
+
+.slider-track-bar {
+  width: 68px;
+  height: 3px;
+  border-radius: var(--radius-pill);
+  background: var(--border);
+  overflow: hidden;
+}
+
+.slider-track-fill {
+  height: 100%;
+  width: 33%;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  transition: width 0.35s var(--ease);
 }
 
 .slider-dots {
@@ -573,14 +636,16 @@ textarea {
 }
 
 .slider-dot {
-  width: 7px;
+  position: relative;
+  width: 8px;
   height: 7px;
   padding: 0;
   border: none;
   border-radius: var(--radius-pill);
   background: var(--border-strong);
   cursor: pointer;
-  transition: width 0.25s var(--ease), background-color 0.2s ease;
+  overflow: hidden;
+  transition: width 0.3s var(--ease), background-color 0.2s ease;
 }
 
 .slider-dot:hover {
@@ -588,8 +653,21 @@ textarea {
 }
 
 .slider-dot.is-active {
-  width: 24px;
+  width: 36px;
+  background: var(--border-strong);
+}
+
+.slider-dot-fill {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-pill);
   background: var(--accent);
+  transform-origin: left center;
+  transform: scaleX(0);
+}
+
+.slider-dot.is-active .slider-dot-fill {
+  transform: scaleX(var(--progress, 1));
 }
 
 .slider-nav-btns {
@@ -603,6 +681,15 @@ textarea {
   height: 38px;
   padding: 0;
   border-radius: 50%;
+  transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.18s var(--ease), color 0.2s ease;
+}
+
+.slider-arrow-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.slider-arrow-btn:active:not(:disabled) {
+  transform: scale(0.95);
 }
 
 .slider-arrow-btn:disabled {
@@ -610,8 +697,21 @@ textarea {
   cursor: not-allowed;
 }
 
+#slider-autoplay .icon-play {
+  display: none;
+}
+
+#slider-autoplay.is-paused .icon-pause {
+  display: none;
+}
+
+#slider-autoplay.is-paused .icon-play {
+  display: block;
+}
+
 /* Project Card */
 .project-card {
+  position: relative;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
@@ -619,12 +719,37 @@ textarea {
   display: flex;
   flex-direction: column;
   box-shadow: var(--shadow-sm);
-  transition: border-color 0.25s var(--ease), transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
+  transition: opacity 0.35s var(--ease), border-color 0.25s var(--ease), transform 0.3s var(--ease), box-shadow 0.25s var(--ease);
+}
+
+.project-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 3;
+  background: radial-gradient(
+    360px circle at var(--cx, 50%) var(--cy, 0%),
+    var(--bg-spotlight),
+    transparent 65%
+  );
+  transition: opacity 0.3s ease;
+}
+
+.project-card:hover::before {
+  opacity: 1;
+}
+
+.project-card.is-dimmed {
+  opacity: 0.68;
+  transform: scale(0.985);
 }
 
 .project-card:hover {
+  opacity: 1;
   border-color: var(--border-strong);
-  transform: translateY(-3px);
+  transform: translateY(-4px);
   box-shadow: var(--shadow-md);
 }
 

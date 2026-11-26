@@ -166,10 +166,14 @@
     metricLocation: document.getElementById("metric-location"),
     projectsCount: document.getElementById("projects-count"),
     projectFilters: document.getElementById("project-filters"),
+    projectsSliderShell: document.getElementById("projects-slider-shell"),
+    projectsViewport: document.getElementById("projects-viewport"),
     projectsGrid: document.getElementById("projects-grid"),
     sliderControls: document.getElementById("slider-controls"),
     sliderIndicator: document.getElementById("slider-indicator"),
+    sliderTrackFill: document.getElementById("slider-track-fill"),
     sliderDots: document.getElementById("slider-dots"),
+    sliderAutoplay: document.getElementById("slider-autoplay"),
     sliderPrev: document.getElementById("slider-prev"),
     sliderNext: document.getElementById("slider-next"),
     coreSkillsCount: document.getElementById("core-skills-count"),
@@ -748,8 +752,17 @@
       .join("");
 
     els.projectsGrid.scrollTo({ left: 0, behavior: "auto" });
+    sliderAutoplayElapsed = 0;
     updateSliderUI(0);
   }
+
+  const AUTOPLAY_MS = 5500;
+  let sliderAutoplayEnabled = true;
+  let sliderHoverPaused = false;
+  let sliderDragging = false;
+  let sliderAutoplayElapsed = 0;
+  let sliderLastFrame = 0;
+  let sliderLastActiveIndex = -1;
 
   function getSliderMetrics() {
     const cards = els.projectsGrid ? els.projectsGrid.querySelectorAll(".project-card") : [];
@@ -762,7 +775,7 @@
       const gap = parseFloat(style.columnGap || style.gap) || 24;
       stepWidth = cards[0].getBoundingClientRect().width + gap;
     }
-    return { total, visible, maxIndex, stepWidth };
+    return { cards, total, visible, maxIndex, stepWidth };
   }
 
   function getCurrentSlideIndex() {
@@ -771,18 +784,38 @@
     return Math.min(maxIndex, Math.max(0, Math.round(els.projectsGrid.scrollLeft / stepWidth)));
   }
 
-  function goToSlide(index) {
+  function goToSlide(index, wrap) {
     const { maxIndex, stepWidth } = getSliderMetrics();
-    const clamped = Math.min(maxIndex, Math.max(0, index));
-    if (stepWidth > 0) {
-      els.projectsGrid.scrollTo({ left: clamped * stepWidth, behavior: "smooth" });
+    if (maxIndex === 0) {
+      updateSliderUI(0);
+      return;
     }
-    updateSliderUI(clamped);
+    const count = maxIndex + 1;
+    const target = wrap
+      ? ((index % count) + count) % count
+      : Math.min(maxIndex, Math.max(0, index));
+    sliderAutoplayElapsed = 0;
+    if (stepWidth > 0) {
+      els.projectsGrid.scrollTo({ left: target * stepWidth, behavior: "smooth" });
+    }
+    updateSliderUI(target);
+  }
+
+  function updateSliderProgressFill() {
+    if (!els.sliderDots) return;
+    const activeDot = els.sliderDots.querySelector(".slider-dot.is-active");
+    if (!activeDot) return;
+    const { maxIndex } = getSliderMetrics();
+    const ratio =
+      !sliderAutoplayEnabled || maxIndex === 0
+        ? 1
+        : Math.min(1, Math.max(0.06, sliderAutoplayElapsed / AUTOPLAY_MS));
+    activeDot.style.setProperty("--progress", ratio.toFixed(3));
   }
 
   function updateSliderUI(forcedIndex) {
     if (!els.sliderControls) return;
-    const { total, visible, maxIndex } = getSliderMetrics();
+    const { cards, total, visible, maxIndex } = getSliderMetrics();
     const activeIndex = typeof forcedIndex === "number" ? forcedIndex : getCurrentSlideIndex();
 
     if (total === 0) {
@@ -798,15 +831,77 @@
         ? `${padCount(firstShown)} / ${padCount(total)}`
         : `${padCount(firstShown)}–${padCount(lastShown)} / ${padCount(total)}`;
 
-    const dotCount = maxIndex + 1;
-    let dotsHtml = "";
-    for (let i = 0; i < dotCount; i++) {
-      dotsHtml += `<button type="button" class="slider-dot ${i === activeIndex ? "is-active" : ""}" data-slide="${i}" role="tab" aria-selected="${i === activeIndex ? "true" : "false"}" aria-label="Slide ${i + 1}"></button>`;
+    // Overall progress track
+    if (els.sliderTrackFill) {
+      const pct = maxIndex === 0 ? 100 : Math.round(((activeIndex + 1) / (maxIndex + 1)) * 100);
+      els.sliderTrackFill.style.width = `${pct}%`;
     }
-    els.sliderDots.innerHTML = dotsHtml;
 
-    els.sliderPrev.disabled = activeIndex <= 0;
-    els.sliderNext.disabled = activeIndex >= maxIndex;
+    // Subtle edge fades when scrollable
+    if (els.projectsViewport) {
+      els.projectsViewport.classList.toggle("has-left-fade", activeIndex > 0);
+      els.projectsViewport.classList.toggle("has-right-fade", activeIndex < maxIndex);
+    }
+
+    // Dynamic active/dimmed focus state per card
+    cards.forEach((card, idx) => {
+      const inView = idx >= activeIndex && idx < activeIndex + visible;
+      card.classList.toggle("is-in-view", inView);
+      card.classList.toggle("is-dimmed", !inView);
+    });
+
+    // Rebuild dots cleanly only when count or active index changed
+    const dotCount = maxIndex + 1;
+    if (els.sliderDots.children.length !== dotCount || sliderLastActiveIndex !== activeIndex) {
+      sliderLastActiveIndex = activeIndex;
+      let dotsHtml = "";
+      for (let i = 0; i < dotCount; i++) {
+        dotsHtml += `<button type="button" class="slider-dot ${i === activeIndex ? "is-active" : ""}" data-slide="${i}" role="tab" aria-selected="${i === activeIndex ? "true" : "false"}" aria-label="Slide ${i + 1}"><span class="slider-dot-fill"></span></button>`;
+      }
+      els.sliderDots.innerHTML = dotsHtml;
+    }
+
+    updateSliderProgressFill();
+
+    const canSlide = maxIndex > 0;
+    els.sliderPrev.disabled = !canSlide;
+    els.sliderNext.disabled = !canSlide;
+    if (els.sliderAutoplay) {
+      els.sliderAutoplay.disabled = !canSlide;
+      els.sliderAutoplay.classList.toggle("is-paused", !sliderAutoplayEnabled);
+      els.sliderAutoplay.setAttribute("aria-pressed", sliderAutoplayEnabled ? "false" : "true");
+    }
+  }
+
+  function setupSliderAutoplay() {
+    function frame(now) {
+      if (!sliderLastFrame) sliderLastFrame = now;
+      const dt = Math.min(100, now - sliderLastFrame);
+      sliderLastFrame = now;
+
+      const { maxIndex } = getSliderMetrics();
+      const modalOpen = els.modal && !els.modal.hidden;
+      const shouldRun =
+        sliderAutoplayEnabled &&
+        !sliderHoverPaused &&
+        !sliderDragging &&
+        !modalOpen &&
+        !document.hidden &&
+        maxIndex > 0;
+
+      if (shouldRun) {
+        sliderAutoplayElapsed += dt;
+        if (sliderAutoplayElapsed >= AUTOPLAY_MS) {
+          sliderAutoplayElapsed = 0;
+          goToSlide(getCurrentSlideIndex() + 1, true);
+        } else {
+          updateSliderProgressFill();
+        }
+      }
+
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
   }
 
   function openModal(projectId) {
@@ -896,21 +991,104 @@
       renderProjects();
     });
 
-    // Projects slider navigation
+    // Projects slider navigation, autoplay, drag, and hover sheen
     if (els.sliderPrev && els.sliderNext && els.sliderDots && els.projectsGrid) {
       els.sliderPrev.addEventListener("click", () => {
-        goToSlide(getCurrentSlideIndex() - 1);
+        goToSlide(getCurrentSlideIndex() - 1, true);
       });
 
       els.sliderNext.addEventListener("click", () => {
-        goToSlide(getCurrentSlideIndex() + 1);
+        goToSlide(getCurrentSlideIndex() + 1, true);
       });
+
+      if (els.sliderAutoplay) {
+        els.sliderAutoplay.addEventListener("click", () => {
+          sliderAutoplayEnabled = !sliderAutoplayEnabled;
+          if (sliderAutoplayEnabled) sliderAutoplayElapsed = 0;
+          updateSliderUI();
+        });
+      }
 
       els.sliderDots.addEventListener("click", (event) => {
         const dot = event.target.closest(".slider-dot");
         if (!dot) return;
-        goToSlide(Number(dot.getAttribute("data-slide")) || 0);
+        goToSlide(Number(dot.getAttribute("data-slide")) || 0, false);
       });
+
+      if (els.projectsSliderShell) {
+        els.projectsSliderShell.addEventListener("mouseenter", () => {
+          sliderHoverPaused = true;
+        });
+        els.projectsSliderShell.addEventListener("mouseleave", () => {
+          sliderHoverPaused = false;
+        });
+        els.projectsSliderShell.addEventListener("focusin", () => {
+          sliderHoverPaused = true;
+        });
+        els.projectsSliderShell.addEventListener("focusout", () => {
+          sliderHoverPaused = false;
+        });
+      }
+
+      // Mouse drag-to-slide (preserves normal clicks on buttons/links)
+      let dragStartX = 0;
+      let dragStartScroll = 0;
+      let dragMoved = false;
+      let suppressClickUntil = 0;
+
+      els.projectsGrid.addEventListener("pointerdown", (event) => {
+        if (event.pointerType !== "mouse" || event.button !== 0) return;
+        if (event.target.closest("a, button")) return;
+        sliderDragging = true;
+        dragMoved = false;
+        dragStartX = event.clientX;
+        dragStartScroll = els.projectsGrid.scrollLeft;
+        els.projectsGrid.classList.add("is-dragging");
+      });
+
+      window.addEventListener("pointermove", (event) => {
+        if (!sliderDragging) return;
+        const delta = event.clientX - dragStartX;
+        if (Math.abs(delta) > 6) dragMoved = true;
+        els.projectsGrid.scrollLeft = dragStartScroll - delta;
+      });
+
+      const endDrag = () => {
+        if (!sliderDragging) return;
+        sliderDragging = false;
+        els.projectsGrid.classList.remove("is-dragging");
+        if (dragMoved) {
+          suppressClickUntil = Date.now() + 220;
+          goToSlide(getCurrentSlideIndex(), false);
+        }
+      };
+
+      els.projectsGrid.addEventListener(
+        "click",
+        (event) => {
+          if (Date.now() < suppressClickUntil) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+        },
+        true
+      );
+
+      window.addEventListener("pointerup", endDrag);
+      window.addEventListener("pointercancel", endDrag);
+
+      // Subtle interactive card cursor sheen
+      els.projectsGrid.addEventListener(
+        "pointermove",
+        (event) => {
+          const card = event.target.closest(".project-card");
+          if (!card) return;
+          const rect = card.getBoundingClientRect();
+          card.style.setProperty("--cx", `${(event.clientX - rect.left).toFixed(1)}px`);
+          card.style.setProperty("--cy", `${(event.clientY - rect.top).toFixed(1)}px`);
+        },
+        { passive: true }
+      );
 
       let scrollRaf = null;
       els.projectsGrid.addEventListener(
@@ -928,10 +1106,10 @@
       els.projectsGrid.addEventListener("keydown", (event) => {
         if (event.key === "ArrowRight") {
           event.preventDefault();
-          goToSlide(getCurrentSlideIndex() + 1);
+          goToSlide(getCurrentSlideIndex() + 1, true);
         } else if (event.key === "ArrowLeft") {
           event.preventDefault();
-          goToSlide(getCurrentSlideIndex() - 1);
+          goToSlide(getCurrentSlideIndex() - 1, true);
         }
       });
 
@@ -942,6 +1120,8 @@
         },
         { passive: true }
       );
+
+      setupSliderAutoplay();
     }
 
     // Open project modal
