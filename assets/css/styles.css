@@ -1137,6 +1137,130 @@ textarea {
   color: var(--text-muted);
 }
 
+/* Skills & Languages Section */
+.skills-showcase-grid {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 24px;
+  align-items: stretch;
+}
+
+.skill-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+}
+
+.skill-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 18px;
+  margin-bottom: 22px;
+  border-bottom: 1px solid var(--border);
+}
+
+.skill-card-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.skill-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  flex: 1;
+  justify-content: center;
+}
+
+.skill-bar-item {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.skill-bar-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.skill-bar-name {
+  font-size: 14.5px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.skill-bar-pct {
+  font-size: 12.5px;
+  color: var(--text-secondary);
+}
+
+.skill-bar-track {
+  height: 6px;
+  border-radius: var(--radius-pill);
+  background: var(--surface-subtle);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.skill-bar-fill {
+  height: 100%;
+  width: 0;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  transition: width 0.85s var(--ease);
+}
+
+.skill-card.is-visible .skill-bar-fill {
+  width: var(--pct, 0%);
+}
+
+.lang-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  flex: 1;
+  align-content: start;
+}
+
+.lang-tile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface-subtle);
+  transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s var(--ease);
+}
+
+.lang-tile:hover {
+  border-color: var(--border-strong);
+  background: var(--surface);
+  transform: translateY(-1px);
+}
+
+.lang-index {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.lang-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+}
+
 /* About Section */
 .about-grid {
   display: grid;
@@ -1521,6 +1645,9 @@ textarea {
     transform: none;
     transition: none;
   }
+  .skill-bar-fill {
+    width: var(--pct, 0%);
+  }
   *,
   *::before,
   *::after {
@@ -1531,6 +1658,7 @@ textarea {
 /* Responsive */
 @media (max-width: 860px) {
   .projects-grid,
+  .skills-showcase-grid,
   .about-grid,
   .contact-grid {
     grid-template-columns: 1fr;
@@ -1572,7 +1700,8 @@ textarea {
     gap: 18px;
   }
 
-  .contact-form {
+  .contact-form,
+  .skill-card {
     padding: 20px;
   }
 

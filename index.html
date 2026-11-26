@@ -47,6 +47,7 @@
 
       <nav class="nav-links" aria-label="Primary navigation">
         <a href="#projects" class="nav-link" data-i18n="nav.projects">Projects</a>
+        <a href="#skills" class="nav-link" data-i18n="nav.skills">Skills</a>
         <a href="#about" class="nav-link" data-i18n="nav.about">About</a>
         <a href="#contact" class="nav-link" data-i18n="nav.contact">Contact</a>
       </nav>
@@ -139,6 +140,40 @@
       </div>
     </section>
 
+    <!-- Skills & Languages -->
+    <section class="section section-bordered" id="skills">
+      <div class="container">
+        <div class="section-header reveal">
+          <div>
+            <span class="section-kicker mono" data-i18n="skills.kicker">Expertise</span>
+            <h2 class="section-title" data-i18n="skills.title">Skills &amp; Languages</h2>
+          </div>
+        </div>
+
+        <div class="skills-showcase-grid">
+          <div class="skill-card reveal">
+            <div class="skill-card-head">
+              <h3 class="skill-card-title" data-i18n="skills.coreTitle">Core Skills</h3>
+              <span class="count-badge mono" id="core-skills-count">04</span>
+            </div>
+            <div class="skill-bars" id="core-skills-list">
+              <!-- Rendered dynamically from data.js -->
+            </div>
+          </div>
+
+          <div class="skill-card reveal">
+            <div class="skill-card-head">
+              <h3 class="skill-card-title" data-i18n="skills.langTitle">Programming Languages</h3>
+              <span class="count-badge mono" id="languages-count">10</span>
+            </div>
+            <div class="lang-grid" id="languages-grid">
+              <!-- Rendered dynamically from data.js -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- About -->
     <section class="section section-bordered" id="about">
       <div class="container">
@@ -152,7 +187,7 @@
           </div>
 
           <div class="skills-panel reveal">
-            <span class="section-kicker mono" data-i18n="about.stackKicker">Capabilities</span>
+            <span class="section-kicker mono" data-i18n="about.stackKicker">Tools &amp; Stack</span>
             <div class="skills-list" id="skills-list">
               <!-- Rendered dynamically from data.js -->
             </div>

@@ -49,11 +49,39 @@ window.PORTFOLIO_DATA = {
     ],
   },
 
-  skills: [
+  coreSkills: [
     {
-      group: { en: "Languages", fr: "Langages" },
-      items: ["TypeScript", "JavaScript", "C# / .NET 8", "HTML / CSS"],
+      name: { en: "Content Creation", fr: "Création de Contenu" },
+      level: 85,
     },
+    {
+      name: { en: "Video Editing", fr: "Montage Vidéo" },
+      level: 90,
+    },
+    {
+      name: { en: "Web Development", fr: "Développement Web" },
+      level: 80,
+    },
+    {
+      name: { en: "Social Media Management", fr: "Gestion des Réseaux Sociaux" },
+      level: 80,
+    },
+  ],
+
+  languages: [
+    "HTML",
+    "CSS",
+    "JavaScript",
+    "TypeScript",
+    "C",
+    "C++",
+    "C#",
+    "PHP",
+    "Python",
+    "SQL",
+  ],
+
+  skills: [
     {
       group: { en: "Frameworks & UI", fr: "Frameworks & UI" },
       items: ["React", "Electron", "Monaco Editor", "Windows Forms"],
@@ -61,6 +89,10 @@ window.PORTFOLIO_DATA = {
     {
       group: { en: "Tools & Systems", fr: "Outils & Systèmes" },
       items: ["FFmpeg", "Vite", "Git & GitHub", "Desktop Packaging"],
+    },
+    {
+      group: { en: "Creative & Digital", fr: "Création & Digital" },
+      items: ["Video Editing", "Content Strategy", "Social Media"],
     },
   ],
 

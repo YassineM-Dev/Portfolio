@@ -7,6 +7,7 @@
   const UI_STRINGS = {
     en: {
       "nav.projects": "Projects",
+      "nav.skills": "Skills",
       "nav.about": "About",
       "nav.contact": "Contact",
       "hero.ctaProjects": "View Projects",
@@ -20,9 +21,13 @@
       "projects.details": "View details",
       "projects.live": "Live",
       "projects.code": "GitHub",
+      "skills.kicker": "Expertise",
+      "skills.title": "Skills & Languages",
+      "skills.coreTitle": "Core Skills",
+      "skills.langTitle": "Programming Languages",
       "about.kicker": "Background",
       "about.title": "About",
-      "about.stackKicker": "Capabilities",
+      "about.stackKicker": "Tools & Stack",
       "contact.kicker": "Contact",
       "contact.title": "Let's work together.",
       "contact.desc":
@@ -47,6 +52,7 @@
     },
     fr: {
       "nav.projects": "Projets",
+      "nav.skills": "Compétences",
       "nav.about": "À propos",
       "nav.contact": "Contact",
       "hero.ctaProjects": "Voir les projets",
@@ -60,9 +66,13 @@
       "projects.details": "Voir les détails",
       "projects.live": "Aperçu",
       "projects.code": "GitHub",
+      "skills.kicker": "Savoir-faire",
+      "skills.title": "Compétences & Langages",
+      "skills.coreTitle": "Compétences Clés",
+      "skills.langTitle": "Langages de Programmation",
       "about.kicker": "Parcours",
       "about.title": "À propos",
-      "about.stackKicker": "Compétences",
+      "about.stackKicker": "Outils & Stack",
       "contact.kicker": "Contact",
       "contact.title": "Travaillons ensemble.",
       "contact.desc":
@@ -105,6 +115,10 @@
     projectsCount: document.getElementById("projects-count"),
     projectFilters: document.getElementById("project-filters"),
     projectsGrid: document.getElementById("projects-grid"),
+    coreSkillsCount: document.getElementById("core-skills-count"),
+    coreSkillsList: document.getElementById("core-skills-list"),
+    languagesCount: document.getElementById("languages-count"),
+    languagesGrid: document.getElementById("languages-grid"),
     aboutCopy: document.getElementById("about-copy"),
     skillsList: document.getElementById("skills-list"),
     contactEmail: document.getElementById("contact-email"),
@@ -373,7 +387,46 @@
       ? paragraphs.map((line) => `<p>${escapeHtml(line)}</p>`).join("")
       : "";
 
-    // Skills
+    // Core Skills (percentage bars)
+    if (els.coreSkillsList && Array.isArray(DATA.coreSkills)) {
+      if (els.coreSkillsCount) {
+        els.coreSkillsCount.textContent = padCount(DATA.coreSkills.length);
+      }
+      els.coreSkillsList.innerHTML = DATA.coreSkills
+        .map(
+          (skill) => `
+          <div class="skill-bar-item">
+            <div class="skill-bar-head">
+              <span class="skill-bar-name">${escapeHtml(localized(skill.name))}</span>
+              <span class="skill-bar-pct mono">${escapeHtml(skill.level)}%</span>
+            </div>
+            <div class="skill-bar-track" role="progressbar" aria-label="${escapeHtml(localized(skill.name))}" aria-valuenow="${escapeHtml(skill.level)}" aria-valuemin="0" aria-valuemax="100">
+              <div class="skill-bar-fill" style="--pct: ${Number(skill.level) || 0}%"></div>
+            </div>
+          </div>
+        `
+        )
+        .join("");
+    }
+
+    // Programming Languages
+    if (els.languagesGrid && Array.isArray(DATA.languages)) {
+      if (els.languagesCount) {
+        els.languagesCount.textContent = padCount(DATA.languages.length);
+      }
+      els.languagesGrid.innerHTML = DATA.languages
+        .map(
+          (lang, idx) => `
+          <div class="lang-tile">
+            <span class="lang-index mono">${padCount(idx + 1)}</span>
+            <span class="lang-name">${escapeHtml(lang)}</span>
+          </div>
+        `
+        )
+        .join("");
+    }
+
+    // About Tools & Stack
     els.skillsList.innerHTML = DATA.skills
       .map(
         (group) => `
@@ -677,7 +730,7 @@
     }
 
     const navLinks = document.querySelectorAll(".nav-link");
-    const sections = ["projects", "about", "contact"]
+    const sections = ["projects", "skills", "about", "contact"]
       .map((id) => document.getElementById(id))
       .filter(Boolean);
 
