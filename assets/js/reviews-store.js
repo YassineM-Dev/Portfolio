@@ -1,33 +1,51 @@
 /**
  * Shared Client Reviews Store — Yassine Portfolio
- * Used by both index.html (app.js) and reviews.html (reviews.js).
+ * Persists all review additions, edits, and deletions reliably across
+ * index.html and reviews.html via localStorage (plus optional Firestore sync).
  */
 (function () {
   "use strict";
 
   const STORAGE_KEY = "yassine_portfolio_reviews_v1";
+  const STATE_KEY = "yassine_portfolio_reviews_state_v2";
 
-  function readLocal() {
+  function readState() {
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return [];
-      const parsed = JSON.parse(raw);
-      return Array.isArray(parsed) ? parsed : [];
-    } catch (e) {
-      return [];
-    }
+      const raw = localStorage.getItem(STATE_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed && typeof parsed === "object") {
+          return {
+            items: Array.isArray(parsed.items) ? parsed.items : [],
+            deletedIds: Array.isArray(parsed.deletedIds) ? parsed.deletedIds : [],
+          };
+        }
+      }
+      // Migrate smoothly from v1 storage if present
+      const legacyRaw = localStorage.getItem(STORAGE_KEY);
+      if (legacyRaw) {
+        const legacy = JSON.parse(legacyRaw);
+        if (Array.isArray(legacy)) {
+          const migrated = { items: legacy, deletedIds: [] };
+          writeState(migrated);
+          return migrated;
+        }
+      }
+    } catch (e) {}
+    return { items: [], deletedIds: [] };
   }
 
-  function writeLocal(list) {
+  function writeState(state) {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+      localStorage.setItem(STATE_KEY, JSON.stringify(state));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state.items));
       return true;
     } catch (e) {
       return false;
     }
   }
 
-  function normalizeReview(item) {
+  function normalizeReview(item, owned) {
     const rating = Math.min(5, Math.max(1, Math.round(Number(item.rating) || 0)));
     return {
       id: String(item.id || `rev-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`),
@@ -36,21 +54,43 @@
       rating: rating,
       comment: String(item.comment || "").trim(),
       date: String(item.date || new Date().toISOString().slice(0, 10)),
+      updatedAt: item.updatedAt ? String(item.updatedAt) : "",
+      isLocal: typeof item.isLocal === "boolean" ? item.isLocal : Boolean(owned),
     };
   }
 
   function getAll() {
-    const localItems = readLocal().map(normalizeReview).filter((r) => r.name && r.comment);
+    const state = readState();
+    const deleted = new Set(state.deletedIds);
+    const localMap = new Map();
+    const merged = [];
+
+    state.items
+      .map((item) => normalizeReview(item, true))
+      .filter((r) => r.name && r.comment && !deleted.has(r.id))
+      .forEach((r) => {
+        localMap.set(r.id, r);
+        merged.push(r);
+      });
+
     const seedItems =
       window.PORTFOLIO_DATA && Array.isArray(window.PORTFOLIO_DATA.reviews)
-        ? window.PORTFOLIO_DATA.reviews.map(normalizeReview).filter((r) => r.name && r.comment)
+        ? window.PORTFOLIO_DATA.reviews
+            .map((item) => normalizeReview(item, false))
+            .filter((r) => r.name && r.comment)
         : [];
-    const seen = new Set(localItems.map((r) => r.id));
-    const merged = [...localItems];
-    seedItems.forEach((item) => {
-      if (!seen.has(item.id)) merged.push(item);
+
+    seedItems.forEach((seed) => {
+      if (!deleted.has(seed.id) && !localMap.has(seed.id)) {
+        merged.push(seed);
+      }
     });
+
     return merged;
+  }
+
+  function getById(id) {
+    return getAll().find((r) => r.id === id) || null;
   }
 
   function add(entry) {
@@ -63,19 +103,73 @@
       return null;
     }
 
-    const review = normalizeReview({
-      id: `rev-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-      name: name,
-      service: service,
-      rating: rating,
-      comment: comment,
-      date: new Date().toISOString().slice(0, 10),
-    });
+    const review = normalizeReview(
+      {
+        id: `rev-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+        name: name,
+        service: service,
+        rating: rating,
+        comment: comment,
+        date: new Date().toISOString().slice(0, 10),
+        isLocal: true,
+      },
+      true
+    );
 
-    const current = readLocal();
-    current.unshift(review);
-    writeLocal(current);
+    const state = readState();
+    state.deletedIds = state.deletedIds.filter((d) => d !== review.id);
+    state.items.unshift(review);
+    writeState(state);
     return review;
+  }
+
+  function update(id, changes) {
+    if (!id) return null;
+    const existing = getById(id);
+    if (!existing) return null;
+
+    const rating = Math.round(Number(changes.rating));
+    const name = String(changes.name || "").trim();
+    const comment = String(changes.comment || "").trim();
+    const service = String(changes.service || "").trim();
+
+    if (!name || !comment || !(rating >= 1 && rating <= 5)) {
+      return null;
+    }
+
+    const updated = normalizeReview(
+      {
+        ...existing,
+        name: name,
+        service: service,
+        rating: rating,
+        comment: comment,
+        updatedAt: new Date().toISOString().slice(0, 10),
+        isLocal: true,
+      },
+      true
+    );
+
+    const state = readState();
+    const idx = state.items.findIndex((r) => r.id === id);
+    if (idx >= 0) {
+      state.items[idx] = updated;
+    } else {
+      state.items.unshift(updated);
+    }
+    state.deletedIds = state.deletedIds.filter((d) => d !== id);
+    writeState(state);
+    return updated;
+  }
+
+  function remove(id) {
+    if (!id) return false;
+    const state = readState();
+    state.items = state.items.filter((r) => r.id !== id);
+    if (!state.deletedIds.includes(id)) {
+      state.deletedIds.push(id);
+    }
+    return writeState(state);
   }
 
   function getStats(list) {
@@ -109,8 +203,13 @@
   }
 
   window.REVIEWS_STORE = {
+    STATE_KEY,
+    STORAGE_KEY,
     getAll,
+    getById,
     add,
+    update,
+    remove,
     getStats,
     starIcon,
     renderStars,

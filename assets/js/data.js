@@ -326,9 +326,9 @@ window.PORTFOLIO_DATA = {
       "downloadUrl": ""
     },
     {
-      "id": "joyboy-routine",
+      "id": "routine-app",
       "index": "05",
-      "title": "JOYBOY Routine",
+      "title": "Routine App",
       "year": "2026",
       "category": {
         "key": "utility",
@@ -344,8 +344,8 @@ window.PORTFOLIO_DATA = {
         "fr": "Organisateur de routine quotidienne minimaliste pour Windows, Android et iOS avec programmes personnalisés, tâches, suivi des prières, études, notes et support AR / FR / EN."
       },
       "description": {
-        "en": "JOYBOY Routine is a clean, cross-platform daily organizer built for Windows (.NET 8 WPF), Android (.apk), and iOS (.ipa / PWA). It lets users build custom time-blocked schedules, track the 5 daily prayers, manage study revisions and personal notes, switch instantly between Arabic (RTL), French, and English, and display live activity on Discord Rich Presence.",
-        "fr": "JOYBOY Routine est un organisateur quotidien épuré disponible sur Windows (.NET 8 WPF), Android (.apk) et iOS (.ipa / PWA). Il permet de créer des programmes horaires personnalisés, suivre les 5 prières quotidiennes, gérer les révisions et les notes, basculer entre Arabe (RTL), Français et Anglais, et afficher son statut sur Discord Rich Presence."
+        "en": "Routine App is a clean, cross-platform daily organizer built for Windows (.NET 8 WPF), Android (.apk), and iOS (.ipa / PWA). It lets users build custom time-blocked schedules, track the 5 daily prayers, manage study revisions and personal notes, switch instantly between Arabic (RTL), French, and English, and display live activity on Discord Rich Presence.",
+        "fr": "Routine App est un organisateur quotidien épuré disponible sur Windows (.NET 8 WPF), Android (.apk) et iOS (.ipa / PWA). Il permet de créer des programmes horaires personnalisés, suivre les 5 prières quotidiennes, gérer les révisions et les notes, basculer entre Arabe (RTL), Français et Anglais, et afficher son statut sur Discord Rich Presence."
       },
       "highlights": {
         "en": [

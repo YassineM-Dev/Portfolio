@@ -40,7 +40,7 @@
         <span class="brand-name" id="brand-name">Yassine</span><span class="brand-dot" aria-hidden="true">.</span>
       </a>
 
-      <nav class="nav-links" aria-label="Reviews navigation">
+      <nav class="nav-links reviews-header-nav" aria-label="Reviews navigation">
         <a href="index.html" class="nav-link back-nav-link">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M19 12H5"></path>
@@ -79,9 +79,9 @@
             </h1>
           </div>
 
-          <a href="index.html#reviews" class="btn btn-primary" data-i18n="reviewsPage.leaveBtn">
+          <button type="button" class="btn btn-primary" id="toggle-review-composer" data-i18n="reviewsPage.leaveBtn">
             Leave a Review
-          </a>
+          </button>
         </div>
 
         <div class="reviews-overview-banner" id="reviews-overview-banner">
@@ -94,6 +94,66 @@
             <!-- Rendered dynamically -->
           </div>
         </div>
+
+        <!-- Inline Add / Edit Review Composer -->
+        <form class="contact-form review-composer-card" id="page-review-form" hidden novalidate>
+          <div class="review-form-head">
+            <h2 class="skill-card-title" id="composer-title" data-i18n="reviewsPage.leaveBtn">Leave a Review</h2>
+            <div class="composer-head-right">
+              <span class="mono review-rating-readout" id="page-rating-readout">0 / 5</span>
+              <button type="button" class="control-btn icon-btn" id="close-review-composer" aria-label="Close review form">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M18 6 6 18"></path>
+                  <path d="m6 6 12 12"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <span class="field-label" data-i18n="reviewsPage.ratingLabel">Rating (1 to 5 stars)</span>
+            <div class="star-picker" id="page-star-picker" role="radiogroup" aria-label="Rating from 1 to 5 stars">
+              <button type="button" class="star-btn" data-value="1" role="radio" aria-checked="false" aria-label="1 star">
+                <svg class="star-svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+              </button>
+              <button type="button" class="star-btn" data-value="2" role="radio" aria-checked="false" aria-label="2 stars">
+                <svg class="star-svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+              </button>
+              <button type="button" class="star-btn" data-value="3" role="radio" aria-checked="false" aria-label="3 stars">
+                <svg class="star-svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+              </button>
+              <button type="button" class="star-btn" data-value="4" role="radio" aria-checked="false" aria-label="4 stars">
+                <svg class="star-svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+              </button>
+              <button type="button" class="star-btn" data-value="5" role="radio" aria-checked="false" aria-label="5 stars">
+                <svg class="star-svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="review-form-row">
+            <div class="form-field">
+              <label for="page-review-name" data-i18n="reviewsPage.nameLabel">Your Name</label>
+              <input type="text" id="page-review-name" name="name" required placeholder="Your name" />
+            </div>
+
+            <div class="form-field">
+              <label for="page-review-service" data-i18n="reviewsPage.serviceLabel">Service (optional)</label>
+              <input type="text" id="page-review-service" name="service" placeholder="Web Dev, Video Editing, Store..." />
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label for="page-review-comment" data-i18n="reviewsPage.commentLabel">Your Review</label>
+            <textarea id="page-review-comment" name="comment" rows="3" required placeholder="Share your experience..."></textarea>
+          </div>
+
+          <div class="form-footer">
+            <button type="submit" class="btn btn-primary" id="page-review-submit" data-i18n="reviewsPage.submit">Submit Review</button>
+            <button type="button" class="btn btn-secondary" id="page-review-cancel" data-i18n="reviewsPage.cancel">Cancel</button>
+            <p class="form-status" id="page-review-status" role="status" aria-live="polite"></p>
+          </div>
+        </form>
 
         <div class="reviews-toolbar">
           <div class="filter-bar" id="rating-filters" role="tablist" aria-label="Filter reviews by rating">

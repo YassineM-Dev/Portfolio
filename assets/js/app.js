@@ -206,6 +206,8 @@
     formStatus: document.getElementById("form-status"),
     langToggle: document.getElementById("lang-toggle"),
     themeToggle: document.getElementById("theme-toggle"),
+    mobileMenuBtn: document.getElementById("mobile-menu-btn"),
+    primaryNav: document.getElementById("primary-nav"),
     modal: document.getElementById("project-modal"),
     modalClose: document.getElementById("modal-close"),
     modalIndex: document.getElementById("modal-index"),
@@ -420,7 +422,7 @@
           <div class="mock-window">
             <div class="mock-topbar">
               <div class="mock-dots"><span></span><span></span><span></span></div>
-              <span class="mock-path">joyboy-routine / AR &middot; FR &middot; EN</span>
+              <span class="mock-path">routine-app / AR &middot; FR &middot; EN</span>
             </div>
             <div class="rt-stage">
               <div class="rt-list">
@@ -1150,6 +1152,56 @@
       try {
         localStorage.setItem("yassine_theme", next);
       } catch (e) {}
+    });
+
+    // Mobile navigation drawer
+    if (els.mobileMenuBtn && els.primaryNav) {
+      const setMenuOpen = (open) => {
+        els.primaryNav.classList.toggle("is-open", open);
+        els.mobileMenuBtn.classList.toggle("is-open", open);
+        els.mobileMenuBtn.setAttribute("aria-expanded", open ? "true" : "false");
+      };
+
+      els.mobileMenuBtn.addEventListener("click", () => {
+        setMenuOpen(!els.primaryNav.classList.contains("is-open"));
+      });
+
+      els.primaryNav.addEventListener("click", (event) => {
+        if (event.target.closest(".nav-link")) {
+          setMenuOpen(false);
+        }
+      });
+
+      document.addEventListener("click", (event) => {
+        if (
+          els.primaryNav.classList.contains("is-open") &&
+          !event.target.closest("#primary-nav") &&
+          !event.target.closest("#mobile-menu-btn")
+        ) {
+          setMenuOpen(false);
+        }
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && els.primaryNav.classList.contains("is-open")) {
+          setMenuOpen(false);
+        }
+      });
+    }
+
+    // Keep reviews synced across tabs and browser back/forward cache
+    window.addEventListener("storage", (event) => {
+      if (
+        window.REVIEWS_STORE &&
+        (event.key === window.REVIEWS_STORE.STATE_KEY ||
+          event.key === window.REVIEWS_STORE.STORAGE_KEY)
+      ) {
+        renderReviewsSummary();
+      }
+    });
+
+    window.addEventListener("pageshow", () => {
+      renderReviewsSummary();
     });
 
     // Language toggle

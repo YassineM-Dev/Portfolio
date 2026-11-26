@@ -12,14 +12,30 @@
       "reviewsPage.kicker": "Client Feedback",
       "reviewsPage.title": "All Client Reviews",
       "reviewsPage.leaveBtn": "Leave a Review",
+      "reviewsPage.editTitle": "Edit Review",
+      "reviewsPage.ratingLabel": "Rating (1 to 5 stars)",
+      "reviewsPage.nameLabel": "Your Name",
+      "reviewsPage.serviceLabel": "Service (optional)",
+      "reviewsPage.commentLabel": "Your Review",
+      "reviewsPage.namePlaceholder": "Your name",
+      "reviewsPage.servicePlaceholder": "Web Dev, Video Editing, Store...",
+      "reviewsPage.commentPlaceholder": "Share your experience...",
+      "reviewsPage.submit": "Submit Review",
+      "reviewsPage.saveEdit": "Save Changes",
+      "reviewsPage.cancel": "Cancel",
+      "reviewsPage.edit": "Edit",
+      "reviewsPage.delete": "Delete",
+      "reviewsPage.edited": "Edited",
+      "reviewsPage.error": "Please select 1–5 stars, enter your name, and write a review.",
+      "reviewsPage.saved": "Review saved permanently.",
+      "reviewsPage.updated": "Review updated.",
       "reviewsPage.all": "All",
       "reviewsPage.reviewSingular": "review",
       "reviewsPage.reviewPlural": "reviews",
       "reviewsPage.emptyTitle": "No reviews yet",
-      "reviewsPage.emptyDesc": "Client reviews submitted on the portfolio appear here automatically.",
+      "reviewsPage.emptyDesc": "Click Leave a Review above to publish the first 1–5 star rating.",
       "reviewsPage.emptyFilterTitle": "No reviews with this rating",
       "reviewsPage.emptyFilterDesc": "Try selecting another star filter or view all reviews.",
-      "reviewsPage.clientFallback": "Client",
     },
     fr: {
       "reviewsPage.pageTitle": "Avis Clients — Yassine",
@@ -27,19 +43,38 @@
       "reviewsPage.kicker": "Retours Clients",
       "reviewsPage.title": "Tous les avis clients",
       "reviewsPage.leaveBtn": "Laisser un avis",
+      "reviewsPage.editTitle": "Modifier l'avis",
+      "reviewsPage.ratingLabel": "Note (1 à 5 étoiles)",
+      "reviewsPage.nameLabel": "Votre nom",
+      "reviewsPage.serviceLabel": "Service (optionnel)",
+      "reviewsPage.commentLabel": "Votre avis",
+      "reviewsPage.namePlaceholder": "Votre nom",
+      "reviewsPage.servicePlaceholder": "Dev Web, Montage, Store...",
+      "reviewsPage.commentPlaceholder": "Partagez votre expérience...",
+      "reviewsPage.submit": "Publier l'avis",
+      "reviewsPage.saveEdit": "Enregistrer",
+      "reviewsPage.cancel": "Annuler",
+      "reviewsPage.edit": "Modifier",
+      "reviewsPage.delete": "Supprimer",
+      "reviewsPage.edited": "Modifié",
+      "reviewsPage.error": "Veuillez choisir 1 à 5 étoiles, saisir votre nom et écrire un avis.",
+      "reviewsPage.saved": "Avis enregistré.",
+      "reviewsPage.updated": "Modifications enregistrées.",
       "reviewsPage.all": "Tous",
       "reviewsPage.reviewSingular": "avis",
       "reviewsPage.reviewPlural": "avis",
       "reviewsPage.emptyTitle": "Aucun avis pour le moment",
-      "reviewsPage.emptyDesc": "Les avis publiés depuis le portfolio s'afficheront ici automatiquement.",
+      "reviewsPage.emptyDesc": "Cliquez sur Laisser un avis ci-dessus pour publier la première note.",
       "reviewsPage.emptyFilterTitle": "Aucun avis pour cette note",
       "reviewsPage.emptyFilterDesc": "Essayez un autre filtre d'étoiles ou affichez tous les avis.",
-      "reviewsPage.clientFallback": "Client",
     },
   };
 
   let currentLang = getSavedLang();
   let activeStar = "all";
+  let editingId = null;
+  let selectedRating = 0;
+  let hoveredRating = 0;
 
   const els = {
     brandName: document.getElementById("brand-name"),
@@ -54,6 +89,18 @@
     breakdown: document.getElementById("page-rating-breakdown"),
     filters: document.getElementById("rating-filters"),
     grid: document.getElementById("all-reviews-grid"),
+    toggleComposer: document.getElementById("toggle-review-composer"),
+    closeComposer: document.getElementById("close-review-composer"),
+    composerForm: document.getElementById("page-review-form"),
+    composerTitle: document.getElementById("composer-title"),
+    starPicker: document.getElementById("page-star-picker"),
+    ratingReadout: document.getElementById("page-rating-readout"),
+    inputName: document.getElementById("page-review-name"),
+    inputService: document.getElementById("page-review-service"),
+    inputComment: document.getElementById("page-review-comment"),
+    submitBtn: document.getElementById("page-review-submit"),
+    cancelBtn: document.getElementById("page-review-cancel"),
+    status: document.getElementById("page-review-status"),
   };
 
   function getSavedLang() {
@@ -95,6 +142,55 @@
     }
   }
 
+  function updateStarPickerUI() {
+    if (!els.starPicker) return;
+    const displayValue = hoveredRating || selectedRating;
+    els.starPicker.querySelectorAll(".star-btn").forEach((btn) => {
+      const val = Number(btn.getAttribute("data-value"));
+      btn.classList.toggle("is-lit", val <= displayValue);
+      btn.setAttribute("aria-checked", val === selectedRating ? "true" : "false");
+    });
+    if (els.ratingReadout) {
+      els.ratingReadout.textContent = `${selectedRating} / 5`;
+    }
+  }
+
+  function openComposer(reviewToEdit) {
+    editingId = reviewToEdit ? reviewToEdit.id : null;
+    els.composerForm.hidden = false;
+    els.status.textContent = "";
+    els.status.className = "form-status";
+
+    if (reviewToEdit) {
+      els.composerTitle.textContent = t("reviewsPage.editTitle");
+      els.submitBtn.textContent = t("reviewsPage.saveEdit");
+      els.inputName.value = reviewToEdit.name;
+      els.inputService.value = reviewToEdit.service || "";
+      els.inputComment.value = reviewToEdit.comment;
+      selectedRating = reviewToEdit.rating;
+    } else {
+      els.composerTitle.textContent = t("reviewsPage.leaveBtn");
+      els.submitBtn.textContent = t("reviewsPage.submit");
+      els.composerForm.reset();
+      selectedRating = 0;
+    }
+
+    hoveredRating = 0;
+    updateStarPickerUI();
+    els.composerForm.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    els.inputName.focus();
+  }
+
+  function closeComposer() {
+    editingId = null;
+    selectedRating = 0;
+    hoveredRating = 0;
+    els.composerForm.reset();
+    els.composerForm.hidden = true;
+    els.status.textContent = "";
+    updateStarPickerUI();
+  }
+
   function renderPage() {
     document.title = t("reviewsPage.pageTitle");
     document.documentElement.lang = currentLang;
@@ -106,6 +202,14 @@
     document.querySelectorAll("[data-i18n]").forEach((node) => {
       node.textContent = t(node.getAttribute("data-i18n"));
     });
+
+    els.inputName.placeholder = t("reviewsPage.namePlaceholder");
+    els.inputService.placeholder = t("reviewsPage.servicePlaceholder");
+    els.inputComment.placeholder = t("reviewsPage.commentPlaceholder");
+    if (editingId) {
+      els.composerTitle.textContent = t("reviewsPage.editTitle");
+      els.submitBtn.textContent = t("reviewsPage.saveEdit");
+    }
 
     const reviews = STORE.getAll();
     const stats = STORE.getStats(reviews);
@@ -171,7 +275,7 @@
         <div class="reviews-empty-card">
           <h3>${escapeHtml(t(isFiltered ? "reviewsPage.emptyFilterTitle" : "reviewsPage.emptyTitle"))}</h3>
           <p>${escapeHtml(t(isFiltered ? "reviewsPage.emptyFilterDesc" : "reviewsPage.emptyDesc"))}</p>
-          <a href="index.html#reviews" class="btn btn-primary">${escapeHtml(t("reviewsPage.leaveBtn"))}</a>
+          <button type="button" class="btn btn-primary" data-open-composer="1">${escapeHtml(t("reviewsPage.leaveBtn"))}</button>
         </div>
       `;
       return;
@@ -180,10 +284,16 @@
     els.grid.innerHTML = filtered
       .map(
         (rev) => `
-        <article class="review-item-card">
+        <article class="review-item-card" data-review-id="${escapeHtml(rev.id)}">
           <div class="review-item-top">
             ${STORE.renderStars(rev.rating, 15)}
-            <span class="review-item-score mono">${rev.rating}.0 / 5</span>
+            <div class="review-item-top-right">
+              <span class="review-item-score mono">${rev.rating}.0 / 5</span>
+              <div class="review-item-actions">
+                <button type="button" class="review-action-btn mono" data-edit-review="${escapeHtml(rev.id)}">${escapeHtml(t("reviewsPage.edit"))}</button>
+                <button type="button" class="review-action-btn is-danger mono" data-delete-review="${escapeHtml(rev.id)}">${escapeHtml(t("reviewsPage.delete"))}</button>
+              </div>
+            </div>
           </div>
           <p class="review-item-comment">${escapeHtml(rev.comment)}</p>
           <div class="review-item-footer">
@@ -191,7 +301,7 @@
               <span class="review-item-author">${escapeHtml(rev.name)}</span>
               ${rev.service ? `<span class="review-item-service mono">${escapeHtml(rev.service)}</span>` : ""}
             </div>
-            <time class="review-item-date mono">${escapeHtml(formatDate(rev.date))}</time>
+            <time class="review-item-date mono">${escapeHtml(formatDate(rev.date))}${rev.updatedAt ? ` &middot; ${escapeHtml(t("reviewsPage.edited"))}` : ""}</time>
           </div>
         </article>
       `
@@ -205,6 +315,83 @@
       if (!btn) return;
       activeStar = btn.getAttribute("data-star") || "all";
       renderPage();
+    });
+
+    els.toggleComposer.addEventListener("click", () => {
+      if (!els.composerForm.hidden && !editingId) {
+        closeComposer();
+      } else {
+        openComposer(null);
+      }
+    });
+
+    els.closeComposer.addEventListener("click", closeComposer);
+    els.cancelBtn.addEventListener("click", closeComposer);
+
+    els.grid.addEventListener("click", (event) => {
+      const openBtn = event.target.closest("[data-open-composer]");
+      if (openBtn) {
+        openComposer(null);
+        return;
+      }
+
+      const editBtn = event.target.closest("[data-edit-review]");
+      if (editBtn) {
+        const rev = STORE.getById(editBtn.getAttribute("data-edit-review"));
+        if (rev) openComposer(rev);
+        return;
+      }
+
+      const delBtn = event.target.closest("[data-delete-review]");
+      if (delBtn) {
+        const id = delBtn.getAttribute("data-delete-review");
+        if (editingId === id) closeComposer();
+        STORE.remove(id);
+        renderPage();
+      }
+    });
+
+    els.starPicker.addEventListener("mouseover", (event) => {
+      const btn = event.target.closest(".star-btn");
+      if (!btn) return;
+      hoveredRating = Number(btn.getAttribute("data-value")) || 0;
+      updateStarPickerUI();
+    });
+
+    els.starPicker.addEventListener("mouseleave", () => {
+      hoveredRating = 0;
+      updateStarPickerUI();
+    });
+
+    els.starPicker.addEventListener("click", (event) => {
+      const btn = event.target.closest(".star-btn");
+      if (!btn) return;
+      selectedRating = Number(btn.getAttribute("data-value")) || 0;
+      hoveredRating = 0;
+      updateStarPickerUI();
+    });
+
+    els.composerForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const payload = {
+        name: els.inputName.value.trim(),
+        service: els.inputService.value.trim(),
+        rating: selectedRating,
+        comment: els.inputComment.value.trim(),
+      };
+
+      const saved = editingId ? STORE.update(editingId, payload) : STORE.add(payload);
+      if (!saved) {
+        els.status.textContent = t("reviewsPage.error");
+        els.status.className = "form-status is-error";
+        return;
+      }
+
+      const msg = editingId ? t("reviewsPage.updated") : t("reviewsPage.saved");
+      closeComposer();
+      renderPage();
+      els.status.textContent = msg;
+      els.status.className = "form-status is-success";
     });
 
     els.themeToggle.addEventListener("click", () => {
@@ -225,7 +412,7 @@
     });
 
     window.addEventListener("storage", (event) => {
-      if (event.key === "yassine_portfolio_reviews_v1") {
+      if (event.key === STORE.STATE_KEY || event.key === STORE.STORAGE_KEY) {
         renderPage();
       }
     });
