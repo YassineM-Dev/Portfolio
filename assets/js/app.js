@@ -171,7 +171,7 @@
     projectsGrid: document.getElementById("projects-grid"),
     sliderControls: document.getElementById("slider-controls"),
     sliderIndicator: document.getElementById("slider-indicator"),
-    sliderTrackFill: document.getElementById("slider-track-fill"),
+    sliderActiveTitle: document.getElementById("slider-active-title"),
     sliderDots: document.getElementById("slider-dots"),
     sliderAutoplay: document.getElementById("slider-autoplay"),
     sliderPrev: document.getElementById("slider-prev"),
@@ -753,9 +753,12 @@
       })
       .join("");
 
-    els.projectsGrid.scrollTo({ left: 0, behavior: "auto" });
     sliderAutoplayElapsed = 0;
-    updateSliderUI(0);
+    sliderLastActiveIndex = -1;
+    requestAnimationFrame(() => {
+      scrollCardToCenter(0, "auto");
+      updateSliderUI(0);
+    });
   }
 
   const AUTOPLAY_MS = 5500;
@@ -766,40 +769,53 @@
   let sliderLastFrame = 0;
   let sliderLastActiveIndex = -1;
 
+  function getSliderCards() {
+    return els.projectsGrid ? Array.from(els.projectsGrid.querySelectorAll(".project-card")) : [];
+  }
+
   function getSliderMetrics() {
-    const cards = els.projectsGrid ? els.projectsGrid.querySelectorAll(".project-card") : [];
+    const cards = getSliderCards();
     const total = cards.length;
-    const visible = window.innerWidth <= 860 ? 1 : 2;
-    const maxIndex = Math.max(0, total - visible);
-    let stepWidth = 0;
-    if (cards.length > 0) {
-      const style = window.getComputedStyle(els.projectsGrid);
-      const gap = parseFloat(style.columnGap || style.gap) || 24;
-      stepWidth = cards[0].getBoundingClientRect().width + gap;
-    }
-    return { cards, total, visible, maxIndex, stepWidth };
+    const maxIndex = Math.max(0, total - 1);
+    return { cards, total, maxIndex };
+  }
+
+  function scrollCardToCenter(index, behavior) {
+    const cards = getSliderCards();
+    const card = cards[index];
+    if (!card || !els.projectsGrid) return;
+    const targetLeft = card.offsetLeft - (els.projectsGrid.clientWidth - card.offsetWidth) / 2;
+    els.projectsGrid.scrollTo({ left: Math.max(0, targetLeft), behavior: behavior || "smooth" });
   }
 
   function getCurrentSlideIndex() {
-    const { maxIndex, stepWidth } = getSliderMetrics();
-    if (!stepWidth || maxIndex === 0) return 0;
-    return Math.min(maxIndex, Math.max(0, Math.round(els.projectsGrid.scrollLeft / stepWidth)));
+    const cards = getSliderCards();
+    if (cards.length <= 1 || !els.projectsGrid) return 0;
+    const viewportCenter = els.projectsGrid.scrollLeft + els.projectsGrid.clientWidth / 2;
+    let bestIdx = 0;
+    let bestDist = Infinity;
+    cards.forEach((card, idx) => {
+      const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+      const dist = Math.abs(cardCenter - viewportCenter);
+      if (dist < bestDist) {
+        bestDist = dist;
+        bestIdx = idx;
+      }
+    });
+    return bestIdx;
   }
 
   function goToSlide(index, wrap) {
-    const { maxIndex, stepWidth } = getSliderMetrics();
-    if (maxIndex === 0) {
-      updateSliderUI(0);
-      return;
-    }
-    const count = maxIndex + 1;
-    const target = wrap
-      ? ((index % count) + count) % count
-      : Math.min(maxIndex, Math.max(0, index));
+    const { total, maxIndex } = getSliderMetrics();
+    if (total === 0) return;
+    const target =
+      maxIndex === 0
+        ? 0
+        : wrap
+        ? ((index % total) + total) % total
+        : Math.min(maxIndex, Math.max(0, index));
     sliderAutoplayElapsed = 0;
-    if (stepWidth > 0) {
-      els.projectsGrid.scrollTo({ left: target * stepWidth, behavior: "smooth" });
-    }
+    scrollCardToCenter(target, "smooth");
     updateSliderUI(target);
   }
 
@@ -817,7 +833,7 @@
 
   function updateSliderUI(forcedIndex) {
     if (!els.sliderControls) return;
-    const { cards, total, visible, maxIndex } = getSliderMetrics();
+    const { cards, total, maxIndex } = getSliderMetrics();
     const activeIndex = typeof forcedIndex === "number" ? forcedIndex : getCurrentSlideIndex();
 
     if (total === 0) {
@@ -826,38 +842,31 @@
     }
     els.sliderControls.hidden = false;
 
-    const firstShown = activeIndex + 1;
-    const lastShown = Math.min(total, activeIndex + visible);
-    els.sliderIndicator.textContent =
-      firstShown === lastShown
-        ? `${padCount(firstShown)} / ${padCount(total)}`
-        : `${padCount(firstShown)}–${padCount(lastShown)} / ${padCount(total)}`;
-
-    // Overall progress track
-    if (els.sliderTrackFill) {
-      const pct = maxIndex === 0 ? 100 : Math.round(((activeIndex + 1) / (maxIndex + 1)) * 100);
-      els.sliderTrackFill.style.width = `${pct}%`;
+    els.sliderIndicator.textContent = `${padCount(activeIndex + 1)} / ${padCount(total)}`;
+    if (els.sliderActiveTitle && cards[activeIndex]) {
+      const titleEl = cards[activeIndex].querySelector(".card-title-btn");
+      els.sliderActiveTitle.textContent = titleEl ? titleEl.textContent.trim() : "";
     }
 
-    // Subtle edge fades when scrollable
+    // Subtle edge fades when side cards peek
     if (els.projectsViewport) {
       els.projectsViewport.classList.toggle("has-left-fade", activeIndex > 0);
       els.projectsViewport.classList.toggle("has-right-fade", activeIndex < maxIndex);
     }
 
-    // Dynamic active/dimmed focus state per card
+    // Selective spotlight focus state (center selected, adjacent sides softly scaled)
     cards.forEach((card, idx) => {
-      const inView = idx >= activeIndex && idx < activeIndex + visible;
-      card.classList.toggle("is-in-view", inView);
-      card.classList.toggle("is-dimmed", !inView);
+      const dist = Math.abs(idx - activeIndex);
+      card.classList.toggle("is-selected", dist === 0);
+      card.classList.toggle("is-side", dist === 1);
+      card.classList.toggle("is-far", dist >= 2);
     });
 
-    // Rebuild dots cleanly only when count or active index changed
-    const dotCount = maxIndex + 1;
-    if (els.sliderDots.children.length !== dotCount || sliderLastActiveIndex !== activeIndex) {
+    // Rebuild dots only when slide count or active slide changed
+    if (els.sliderDots.children.length !== total || sliderLastActiveIndex !== activeIndex) {
       sliderLastActiveIndex = activeIndex;
       let dotsHtml = "";
-      for (let i = 0; i < dotCount; i++) {
+      for (let i = 0; i < total; i++) {
         dotsHtml += `<button type="button" class="slider-dot ${i === activeIndex ? "is-active" : ""}" data-slide="${i}" role="tab" aria-selected="${i === activeIndex ? "true" : "false"}" aria-label="Slide ${i + 1}"><span class="slider-dot-fill"></span></button>`;
       }
       els.sliderDots.innerHTML = dotsHtml;
@@ -1071,6 +1080,15 @@
           if (Date.now() < suppressClickUntil) {
             event.preventDefault();
             event.stopPropagation();
+            return;
+          }
+          // Clicking any flanking side card selects & smoothly centers it first
+          const card = event.target.closest(".project-card");
+          if (card && !card.classList.contains("is-selected")) {
+            event.preventDefault();
+            event.stopPropagation();
+            const idx = getSliderCards().indexOf(card);
+            if (idx >= 0) goToSlide(idx, false);
           }
         },
         true
@@ -1118,7 +1136,9 @@
       window.addEventListener(
         "resize",
         () => {
-          updateSliderUI();
+          const idx = getCurrentSlideIndex();
+          scrollCardToCenter(idx, "auto");
+          updateSliderUI(idx);
         },
         { passive: true }
       );
