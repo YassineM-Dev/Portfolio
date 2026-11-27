@@ -42,7 +42,7 @@
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   --container: 100%;
-  --gutter: clamp(20px, 4vw, 64px);
+  --gutter: clamp(14px, 1.8vw, 28px);
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -98,6 +98,7 @@ body {
   font-size: 16px;
   line-height: 1.6;
   overflow-x: hidden;
+  overflow-x: clip;
   transition: background-color 0.25s var(--ease), color 0.25s var(--ease);
 }
 
@@ -398,8 +399,8 @@ textarea {
 
 .hero-title {
   margin: 0 0 22px;
-  max-width: 22ch;
-  font-size: clamp(38px, 5.6vw, 76px);
+  max-width: 26ch;
+  font-size: clamp(36px, 5.2vw, 76px);
   font-weight: 650;
   letter-spacing: -0.04em;
   line-height: 1.05;
@@ -408,8 +409,8 @@ textarea {
 
 .hero-subtitle {
   margin: 0 0 36px;
-  max-width: 64ch;
-  font-size: clamp(16px, 1.45vw, 19px);
+  max-width: 78ch;
+  font-size: clamp(16px, 1.35vw, 19px);
   line-height: 1.65;
   color: var(--text-secondary);
 }
@@ -540,8 +541,8 @@ textarea {
 
 .projects-slider-shell {
   position: relative;
-  --slide-w: clamp(440px, 34vw, 540px);
-  --slide-gap: clamp(20px, 2vw, 32px);
+  --slide-w: clamp(440px, 36vw, 600px);
+  --slide-gap: clamp(18px, 1.8vw, 28px);
 }
 
 .projects-viewport {
@@ -558,7 +559,7 @@ textarea {
   position: absolute;
   top: 0;
   bottom: 14px;
-  width: clamp(48px, 6vw, 112px);
+  width: clamp(28px, 3.2vw, 64px);
   pointer-events: none;
   z-index: 4;
   opacity: 0;
@@ -1525,8 +1526,8 @@ textarea {
 /* Skills & Languages Section */
 .skills-showcase-grid {
   display: grid;
-  grid-template-columns: 1.05fr 0.95fr;
-  gap: clamp(20px, 2.2vw, 32px);
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(18px, 2vw, 28px);
   align-items: stretch;
 }
 
@@ -1649,14 +1650,13 @@ textarea {
 /* About Section */
 .about-grid {
   display: grid;
-  grid-template-columns: 1.15fr 0.85fr;
-  gap: clamp(32px, 4.5vw, 72px);
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: clamp(28px, 3.5vw, 56px);
   align-items: start;
 }
 
 .about-copy {
   margin-top: 22px;
-  max-width: 66ch;
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -2067,8 +2067,8 @@ textarea {
 
 .all-reviews-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-  gap: 22px;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: clamp(16px, 1.8vw, 24px);
 }
 
 .review-item-card {
@@ -2154,14 +2154,14 @@ textarea {
 /* Contact Section */
 .contact-grid {
   display: grid;
-  grid-template-columns: 0.95fr 1.05fr;
-  gap: clamp(32px, 4.5vw, 72px);
+  grid-template-columns: 1fr 1.1fr;
+  gap: clamp(28px, 3.5vw, 56px);
   align-items: start;
 }
 
 .contact-desc {
   margin: 18px 0 28px;
-  max-width: 52ch;
+  max-width: 60ch;
   color: var(--text-secondary);
   font-size: 15.5px;
 }
@@ -2507,12 +2507,12 @@ textarea {
 /* Responsive */
 @media (max-width: 900px) {
   .projects-slider-shell {
-    --slide-w: min(460px, calc(100vw - 110px));
+    --slide-w: min(460px, calc(100vw - 88px));
   }
 
   .projects-viewport::before,
   .projects-viewport::after {
-    width: 32px;
+    width: 26px;
   }
 }
 
@@ -2576,7 +2576,7 @@ textarea {
 
 @media (max-width: 640px) {
   :root {
-    --gutter: 16px;
+    --gutter: 14px;
   }
 
   .header-inner {
@@ -2625,13 +2625,13 @@ textarea {
   }
 
   .projects-slider-shell {
-    --slide-w: min(360px, calc(100vw - 72px));
+    --slide-w: min(360px, calc(100vw - 56px));
     --slide-gap: 14px;
   }
 
   .projects-viewport::before,
   .projects-viewport::after {
-    width: 18px;
+    width: 16px;
   }
 
   .slider-controls {
