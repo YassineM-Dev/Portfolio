@@ -677,91 +677,122 @@
       .join("");
   }
 
+  function buildProjectCardHtml(project, realIndex, isClone) {
+    const extLinks = [];
+    if (project.repoUrl) {
+      extLinks.push(
+        `<a class="ext-link" href="${escapeHtml(project.repoUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(t("projects.code"))} ${arrowUpRightIcon()}</a>`
+      );
+    }
+
+    let primaryCta = "";
+    if (project.downloadUrl) {
+      primaryCta = `
+        <a class="btn btn-primary card-cta-btn" href="${escapeHtml(project.downloadUrl)}" download rel="noopener noreferrer">
+          ${downloadIcon()}
+          <span>${escapeHtml(t("projects.downloadInstaller"))}</span>
+        </a>
+      `;
+    } else if (project.liveUrl) {
+      primaryCta = `
+        <a class="btn btn-secondary card-cta-btn" href="${escapeHtml(project.liveUrl)}" target="_blank" rel="noopener noreferrer">
+          <span>${escapeHtml(t("projects.visitLive"))}</span>
+          ${arrowUpRightIcon()}
+        </a>
+      `;
+    }
+
+    const cloneAttrs = isClone ? ` data-clone="true" aria-hidden="true"` : "";
+
+    return `
+      <article class="project-card" data-project-id="${escapeHtml(project.id)}" data-real-index="${realIndex}"${cloneAttrs}>
+        <div class="card-preview" data-open-modal="${escapeHtml(project.id)}">
+          ${renderProjectPreview(project)}
+        </div>
+        <div class="card-body">
+          <div class="card-meta mono">
+            <span class="card-meta-left">
+              <span>${escapeHtml(project.index)}</span>
+              <span>/</span>
+              <span>${escapeHtml(project.year)}</span>
+            </span>
+            <span class="card-category">${escapeHtml(localized(project.category))}</span>
+          </div>
+
+          <h3 class="card-title">
+            <button type="button" class="card-title-btn" data-open-modal="${escapeHtml(project.id)}"${isClone ? ' tabindex="-1"' : ""}>
+              ${escapeHtml(project.title)}
+            </button>
+          </h3>
+
+          <p class="card-summary">${escapeHtml(localized(project.summary))}</p>
+
+          <div class="tag-list">
+            ${project.stack.map((tech) => `<span class="tag">${escapeHtml(tech)}</span>`).join("")}
+          </div>
+
+          ${primaryCta ? `<div class="card-cta-wrap">${primaryCta}</div>` : ""}
+
+          <div class="card-footer">
+            <button type="button" class="card-action-link" data-open-modal="${escapeHtml(project.id)}"${isClone ? ' tabindex="-1"' : ""}>
+              <span>${escapeHtml(t("projects.details"))}</span>
+              ${arrowRightIcon()}
+            </button>
+            ${extLinks.length ? `<div class="card-ext-links">${extLinks.join("")}</div>` : ""}
+          </div>
+        </div>
+      </article>
+    `;
+  }
+
   function renderProjects() {
     const filtered =
       activeCategory === "all"
         ? DATA.projects
         : DATA.projects.filter((p) => p.category && p.category.key === activeCategory);
 
+    stopSliderAnimation();
+    sliderFilteredProjects = filtered;
+    sliderRealCount = filtered.length;
+    sliderInfinite = sliderRealCount > 1;
+
     els.projectsCount.textContent = padCount(filtered.length);
 
-    els.projectsGrid.innerHTML = filtered
-      .map((project) => {
-        const extLinks = [];
-        if (project.repoUrl) {
-          extLinks.push(
-            `<a class="ext-link" href="${escapeHtml(project.repoUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(t("projects.code"))} ${arrowUpRightIcon()}</a>`
-          );
-        }
+    if (sliderRealCount === 0) {
+      els.projectsGrid.innerHTML = "";
+    } else if (sliderInfinite) {
+      const totalTrack = sliderRealCount + SLIDER_CLONE_COUNT * 2;
+      const parts = [];
+      for (let k = 0; k < totalTrack; k++) {
+        const realIdx = (((k - SLIDER_CLONE_COUNT) % sliderRealCount) + sliderRealCount) % sliderRealCount;
+        const isClone = k < SLIDER_CLONE_COUNT || k >= SLIDER_CLONE_COUNT + sliderRealCount;
+        parts.push(buildProjectCardHtml(filtered[realIdx], realIdx, isClone));
+      }
+      els.projectsGrid.innerHTML = parts.join("");
+    } else {
+      els.projectsGrid.innerHTML = buildProjectCardHtml(filtered[0], 0, false);
+    }
 
-        let primaryCta = "";
-        if (project.downloadUrl) {
-          primaryCta = `
-            <a class="btn btn-primary card-cta-btn" href="${escapeHtml(project.downloadUrl)}" download rel="noopener noreferrer">
-              ${downloadIcon()}
-              <span>${escapeHtml(t("projects.downloadInstaller"))}</span>
-            </a>
-          `;
-        } else if (project.liveUrl) {
-          primaryCta = `
-            <a class="btn btn-secondary card-cta-btn" href="${escapeHtml(project.liveUrl)}" target="_blank" rel="noopener noreferrer">
-              <span>${escapeHtml(t("projects.visitLive"))}</span>
-              ${arrowUpRightIcon()}
-            </a>
-          `;
-        }
-
-        return `
-          <article class="project-card" data-project-id="${escapeHtml(project.id)}">
-            <div class="card-preview" data-open-modal="${escapeHtml(project.id)}">
-              ${renderProjectPreview(project)}
-            </div>
-            <div class="card-body">
-              <div class="card-meta mono">
-                <span class="card-meta-left">
-                  <span>${escapeHtml(project.index)}</span>
-                  <span>/</span>
-                  <span>${escapeHtml(project.year)}</span>
-                </span>
-                <span class="card-category">${escapeHtml(localized(project.category))}</span>
-              </div>
-
-              <h3 class="card-title">
-                <button type="button" class="card-title-btn" data-open-modal="${escapeHtml(project.id)}">
-                  ${escapeHtml(project.title)}
-                </button>
-              </h3>
-
-              <p class="card-summary">${escapeHtml(localized(project.summary))}</p>
-
-              <div class="tag-list">
-                ${project.stack.map((tech) => `<span class="tag">${escapeHtml(tech)}</span>`).join("")}
-              </div>
-
-              ${primaryCta ? `<div class="card-cta-wrap">${primaryCta}</div>` : ""}
-
-              <div class="card-footer">
-                <button type="button" class="card-action-link" data-open-modal="${escapeHtml(project.id)}">
-                  <span>${escapeHtml(t("projects.details"))}</span>
-                  ${arrowRightIcon()}
-                </button>
-                ${extLinks.length ? `<div class="card-ext-links">${extLinks.join("")}</div>` : ""}
-              </div>
-            </div>
-          </article>
-        `;
-      })
-      .join("");
-
+    sliderTrackIndex = sliderInfinite ? SLIDER_CLONE_COUNT : 0;
     sliderAutoplayElapsed = 0;
     sliderLastActiveIndex = -1;
+    snapTrackToIndex(sliderTrackIndex);
     requestAnimationFrame(() => {
-      scrollCardToCenter(0, "auto");
-      updateSliderUI(0);
+      snapTrackToIndex(sliderTrackIndex);
     });
   }
 
   const AUTOPLAY_MS = 5500;
+  const SLIDER_CLONE_COUNT = 2;
+  const SLIDER_ANIM_MS = 580;
+
+  let sliderFilteredProjects = [];
+  let sliderRealCount = 0;
+  let sliderInfinite = false;
+  let sliderTrackIndex = 0;
+  let sliderCurrentX = 0;
+  let sliderAnimRaf = 0;
+  let sliderAnimating = false;
   let sliderAutoplayEnabled = true;
   let sliderHoverPaused = false;
   let sliderDragging = false;
@@ -773,68 +804,225 @@
     return els.projectsGrid ? Array.from(els.projectsGrid.querySelectorAll(".project-card")) : [];
   }
 
-  function getSliderMetrics() {
+  function getSliderGeometry() {
     const cards = getSliderCards();
-    const total = cards.length;
-    const maxIndex = Math.max(0, total - 1);
-    return { cards, total, maxIndex };
+    if (!cards.length || !els.projectsViewport || !els.projectsGrid) {
+      return { cards, vpW: 0, cardW: 0, gap: 20, step: 0 };
+    }
+    const vpW = els.projectsViewport.clientWidth;
+    const cardW = cards[0].offsetWidth;
+    const gap = parseFloat(window.getComputedStyle(els.projectsGrid).gap) || 20;
+    return { cards, vpW, cardW, gap, step: cardW + gap };
   }
 
-  function scrollCardToCenter(index, behavior) {
-    const cards = getSliderCards();
-    const card = cards[index];
-    if (!card || !els.projectsGrid) return;
-    const targetLeft = card.offsetLeft - (els.projectsGrid.clientWidth - card.offsetWidth) / 2;
-    els.projectsGrid.scrollTo({ left: Math.max(0, targetLeft), behavior: behavior || "smooth" });
+  function getTrackXForIndex(trackIdx, geom) {
+    const g = geom || getSliderGeometry();
+    return (g.vpW - g.cardW) / 2 - trackIdx * g.step;
   }
 
-  function getCurrentSlideIndex() {
-    const cards = getSliderCards();
-    if (cards.length <= 1 || !els.projectsGrid) return 0;
-    const viewportCenter = els.projectsGrid.scrollLeft + els.projectsGrid.clientWidth / 2;
-    let bestIdx = 0;
-    let bestDist = Infinity;
-    cards.forEach((card, idx) => {
-      const cardCenter = card.offsetLeft + card.offsetWidth / 2;
-      const dist = Math.abs(cardCenter - viewportCenter);
-      if (dist < bestDist) {
-        bestDist = dist;
-        bestIdx = idx;
+  function trackToRealIndex(trackIdx) {
+    if (sliderRealCount <= 0) return 0;
+    if (!sliderInfinite) return Math.min(sliderRealCount - 1, Math.max(0, trackIdx));
+    return (((trackIdx - SLIDER_CLONE_COUNT) % sliderRealCount) + sliderRealCount) % sliderRealCount;
+  }
+
+  function stopSliderAnimation() {
+    if (sliderAnimRaf) {
+      cancelAnimationFrame(sliderAnimRaf);
+      sliderAnimRaf = 0;
+    }
+    sliderAnimating = false;
+    if (els.projectsGrid) els.projectsGrid.classList.remove("is-animating");
+  }
+
+  function applyTrackTransform(x, activeTrackOverride) {
+    sliderCurrentX = x;
+    if (!els.projectsGrid) return;
+    els.projectsGrid.style.transform = `translate3d(${x.toFixed(2)}px, 0, 0)`;
+
+    const g = getSliderGeometry();
+    if (!g.cards.length || !g.step) return;
+
+    const vpCenter = g.vpW / 2;
+    let closestIdx = 0;
+    let closestDist = Infinity;
+
+    g.cards.forEach((card, idx) => {
+      const cardCenter = x + idx * g.step + g.cardW / 2;
+      const normDist = Math.abs(cardCenter - vpCenter) / g.step;
+      if (normDist < closestDist) {
+        closestDist = normDist;
+        closestIdx = idx;
       }
+
+      // Smooth continuous spotlight curves synced pixel-for-pixel with motion
+      const near = Math.max(0, 1 - Math.min(1, normDist));
+      const farT = Math.max(0, Math.min(1, normDist - 1));
+
+      const scale = normDist <= 1 ? 0.9 + 0.1 * near : 0.9 - 0.05 * farT;
+      const opacity = normDist <= 1 ? 0.5 + 0.5 * near : 0.5 - 0.22 * farT;
+      const liftY = normDist <= 1 ? 6 * (1 - near) : 6 + 4 * farT;
+      const sat = normDist <= 1 ? 0.7 + 0.3 * near : 0.7 - 0.2 * farT;
+
+      card.style.setProperty("--card-scale", scale.toFixed(4));
+      card.style.setProperty("--card-opacity", opacity.toFixed(4));
+      card.style.setProperty("--card-y", `${liftY.toFixed(2)}px`);
+      card.style.setProperty("--card-sat", sat.toFixed(4));
     });
-    return bestIdx;
+
+    const focusIdx = typeof activeTrackOverride === "number" ? activeTrackOverride : closestIdx;
+    g.cards.forEach((card, idx) => {
+      const dist = Math.abs(idx - focusIdx);
+      card.classList.toggle("is-selected", dist === 0);
+      card.classList.toggle("is-side", dist === 1);
+      card.classList.toggle("is-far", dist >= 2);
+    });
+
+    if (sliderDragging) {
+      updateSliderUI(trackToRealIndex(focusIdx));
+    }
   }
 
-  function goToSlide(index, wrap) {
-    const { total, maxIndex } = getSliderMetrics();
-    if (total === 0) return;
-    const target =
-      maxIndex === 0
-        ? 0
-        : wrap
-        ? ((index % total) + total) % total
-        : Math.min(maxIndex, Math.max(0, index));
+  function normalizeInfiniteTrack() {
+    if (!sliderInfinite || sliderRealCount <= 1 || !els.projectsGrid) return;
+    const minReal = SLIDER_CLONE_COUNT;
+    const maxReal = SLIDER_CLONE_COUNT + sliderRealCount - 1;
+    if (sliderTrackIndex >= minReal && sliderTrackIndex <= maxReal) return;
+
+    const g = getSliderGeometry();
+    if (!g.step) return;
+    const realIdx = trackToRealIndex(sliderTrackIndex);
+    const wrappedIdx = SLIDER_CLONE_COUNT + realIdx;
+    const deltaTracks = wrappedIdx - sliderTrackIndex;
+    sliderTrackIndex = wrappedIdx;
+    const wrappedX = sliderCurrentX - deltaTracks * g.step;
+
+    // Atomic zero-transition swap so the clone->real loop boundary is 100% invisible
+    els.projectsGrid.classList.add("is-instant");
+    applyTrackTransform(wrappedX, sliderTrackIndex);
+    void els.projectsGrid.offsetWidth;
+    els.projectsGrid.classList.remove("is-instant");
+  }
+
+  function snapTrackToIndex(trackIdx) {
+    stopSliderAnimation();
+    sliderTrackIndex = trackIdx;
+    const g = getSliderGeometry();
+    if (!g.cards.length || !g.step) {
+      updateSliderUI(0);
+      return;
+    }
+    const targetX = getTrackXForIndex(trackIdx, g);
+    els.projectsGrid.classList.add("is-instant");
+    applyTrackTransform(targetX, trackIdx);
+    void els.projectsGrid.offsetWidth;
+    els.projectsGrid.classList.remove("is-instant");
+    updateSliderUI(trackToRealIndex(trackIdx));
+  }
+
+  function animateToTrackIndex(targetTrackIdx, durationMs) {
+    const g = getSliderGeometry();
+    if (!g.cards.length || !g.step) return;
+
+    stopSliderAnimation();
+    sliderTrackIndex = targetTrackIdx;
     sliderAutoplayElapsed = 0;
-    scrollCardToCenter(target, "smooth");
-    updateSliderUI(target);
+
+    updateSliderUI(trackToRealIndex(targetTrackIdx));
+
+    const startX = sliderCurrentX;
+    const endX = getTrackXForIndex(targetTrackIdx, g);
+    const deltaX = endX - startX;
+
+    if (Math.abs(deltaX) < 0.5) {
+      applyTrackTransform(endX, targetTrackIdx);
+      normalizeInfiniteTrack();
+      return;
+    }
+
+    const duration = durationMs || SLIDER_ANIM_MS;
+    const startTime = performance.now();
+    sliderAnimating = true;
+    els.projectsGrid.classList.add("is-animating");
+
+    // Smooth ease-out curve: snappy launch with a silky frictionless settle
+    const ease = (t) => 1 - Math.pow(1 - t, 3.6);
+
+    const tick = (now) => {
+      const elapsed = now - startTime;
+      const t = Math.min(1, elapsed / duration);
+      const curX = startX + deltaX * ease(t);
+      applyTrackTransform(curX);
+
+      if (t < 1) {
+        sliderAnimRaf = requestAnimationFrame(tick);
+      } else {
+        sliderAnimRaf = 0;
+        sliderAnimating = false;
+        applyTrackTransform(endX, targetTrackIdx);
+        normalizeInfiniteTrack();
+        void els.projectsGrid.offsetWidth;
+        els.projectsGrid.classList.remove("is-animating");
+      }
+    };
+
+    sliderAnimRaf = requestAnimationFrame(tick);
+  }
+
+  function stepSliderBy(delta) {
+    if (sliderRealCount <= 1) return;
+    normalizeInfiniteTrack();
+    const cards = getSliderCards();
+    const nextIdx = sliderTrackIndex + delta;
+    if (nextIdx >= 0 && nextIdx < cards.length) {
+      animateToTrackIndex(nextIdx);
+    } else {
+      const realIdx = trackToRealIndex(nextIdx);
+      animateToTrackIndex(SLIDER_CLONE_COUNT + realIdx);
+    }
+  }
+
+  function goToRealSlide(targetRealIdx) {
+    if (sliderRealCount <= 1) return;
+    normalizeInfiniteTrack();
+    const currentReal = trackToRealIndex(sliderTrackIndex);
+    const target = ((targetRealIdx % sliderRealCount) + sliderRealCount) % sliderRealCount;
+    if (target === currentReal) {
+      animateToTrackIndex(sliderTrackIndex, 340);
+      return;
+    }
+
+    // Choose shortest circular direction around the infinite loop
+    let delta = target - currentReal;
+    if (delta > sliderRealCount / 2) delta -= sliderRealCount;
+    if (delta < -sliderRealCount / 2) delta += sliderRealCount;
+
+    const cards = getSliderCards();
+    const candidate = sliderTrackIndex + delta;
+    if (candidate >= 0 && candidate < cards.length) {
+      const dur = Math.abs(delta) > 1 ? Math.round(SLIDER_ANIM_MS * 1.15) : SLIDER_ANIM_MS;
+      animateToTrackIndex(candidate, dur);
+    } else {
+      animateToTrackIndex(SLIDER_CLONE_COUNT + target);
+    }
   }
 
   function updateSliderProgressFill() {
     if (!els.sliderDots) return;
     const activeDot = els.sliderDots.querySelector(".slider-dot.is-active");
     if (!activeDot) return;
-    const { maxIndex } = getSliderMetrics();
     const ratio =
-      !sliderAutoplayEnabled || maxIndex === 0
+      !sliderAutoplayEnabled || sliderRealCount <= 1
         ? 1
         : Math.min(1, Math.max(0.06, sliderAutoplayElapsed / AUTOPLAY_MS));
     activeDot.style.setProperty("--progress", ratio.toFixed(3));
   }
 
-  function updateSliderUI(forcedIndex) {
+  function updateSliderUI(forcedRealIndex) {
     if (!els.sliderControls) return;
-    const { cards, total, maxIndex } = getSliderMetrics();
-    const activeIndex = typeof forcedIndex === "number" ? forcedIndex : getCurrentSlideIndex();
+    const total = sliderRealCount;
+    const activeIndex =
+      typeof forcedRealIndex === "number" ? forcedRealIndex : trackToRealIndex(sliderTrackIndex);
 
     if (total === 0) {
       els.sliderControls.hidden = true;
@@ -842,39 +1030,46 @@
     }
     els.sliderControls.hidden = false;
 
+    const slideChanged = sliderLastActiveIndex !== activeIndex;
     els.sliderIndicator.textContent = `${padCount(activeIndex + 1)} / ${padCount(total)}`;
-    if (els.sliderActiveTitle && cards[activeIndex]) {
-      const titleEl = cards[activeIndex].querySelector(".card-title-btn");
-      els.sliderActiveTitle.textContent = titleEl ? titleEl.textContent.trim() : "";
+    if (els.sliderActiveTitle && sliderFilteredProjects[activeIndex]) {
+      const nextTitle = sliderFilteredProjects[activeIndex].title || "";
+      if (els.sliderActiveTitle.textContent !== nextTitle) {
+        els.sliderActiveTitle.textContent = nextTitle;
+        if (sliderLastActiveIndex !== -1) {
+          els.sliderActiveTitle.classList.remove("is-swapping");
+          void els.sliderActiveTitle.offsetWidth;
+          els.sliderActiveTitle.classList.add("is-swapping");
+        }
+      }
     }
 
-    // Subtle edge fades when side cards peek
+    // Soft side fade masks on both edges whenever infinite flanking cards exist
     if (els.projectsViewport) {
-      els.projectsViewport.classList.toggle("has-left-fade", activeIndex > 0);
-      els.projectsViewport.classList.toggle("has-right-fade", activeIndex < maxIndex);
+      els.projectsViewport.classList.toggle("has-left-fade", sliderInfinite);
+      els.projectsViewport.classList.toggle("has-right-fade", sliderInfinite);
     }
 
-    // Selective spotlight focus state (center selected, adjacent sides softly scaled)
-    cards.forEach((card, idx) => {
-      const dist = Math.abs(idx - activeIndex);
-      card.classList.toggle("is-selected", dist === 0);
-      card.classList.toggle("is-side", dist === 1);
-      card.classList.toggle("is-far", dist >= 2);
-    });
-
-    // Rebuild dots only when slide count or active slide changed
-    if (els.sliderDots.children.length !== total || sliderLastActiveIndex !== activeIndex) {
-      sliderLastActiveIndex = activeIndex;
+    // Rebuild dot nodes only when slide count changes so active pill width animates smoothly
+    if (els.sliderDots.children.length !== total) {
       let dotsHtml = "";
       for (let i = 0; i < total; i++) {
         dotsHtml += `<button type="button" class="slider-dot ${i === activeIndex ? "is-active" : ""}" data-slide="${i}" role="tab" aria-selected="${i === activeIndex ? "true" : "false"}" aria-label="Slide ${i + 1}"><span class="slider-dot-fill"></span></button>`;
       }
       els.sliderDots.innerHTML = dotsHtml;
+    } else if (slideChanged) {
+      Array.from(els.sliderDots.children).forEach((dot, i) => {
+        const isActive = i === activeIndex;
+        dot.classList.toggle("is-active", isActive);
+        dot.setAttribute("aria-selected", isActive ? "true" : "false");
+        if (!isActive) dot.style.removeProperty("--progress");
+      });
     }
+    sliderLastActiveIndex = activeIndex;
 
     updateSliderProgressFill();
 
-    const canSlide = maxIndex > 0;
+    const canSlide = total > 1;
     els.sliderPrev.disabled = !canSlide;
     els.sliderNext.disabled = !canSlide;
     if (els.sliderAutoplay) {
@@ -890,21 +1085,21 @@
       const dt = Math.min(100, now - sliderLastFrame);
       sliderLastFrame = now;
 
-      const { maxIndex } = getSliderMetrics();
       const modalOpen = els.modal && !els.modal.hidden;
       const shouldRun =
         sliderAutoplayEnabled &&
         !sliderHoverPaused &&
         !sliderDragging &&
+        !sliderAnimating &&
         !modalOpen &&
         !document.hidden &&
-        maxIndex > 0;
+        sliderRealCount > 1;
 
       if (shouldRun) {
         sliderAutoplayElapsed += dt;
         if (sliderAutoplayElapsed >= AUTOPLAY_MS) {
           sliderAutoplayElapsed = 0;
-          goToSlide(getCurrentSlideIndex() + 1, true);
+          stepSliderBy(1);
         } else {
           updateSliderProgressFill();
         }
@@ -1002,14 +1197,14 @@
       renderProjects();
     });
 
-    // Projects slider navigation, autoplay, drag, and hover sheen
+    // Projects infinite slider navigation, autoplay, drag/swipe, wheel, and hover sheen
     if (els.sliderPrev && els.sliderNext && els.sliderDots && els.projectsGrid) {
       els.sliderPrev.addEventListener("click", () => {
-        goToSlide(getCurrentSlideIndex() - 1, true);
+        stepSliderBy(-1);
       });
 
       els.sliderNext.addEventListener("click", () => {
-        goToSlide(getCurrentSlideIndex() + 1, true);
+        stepSliderBy(1);
       });
 
       if (els.sliderAutoplay) {
@@ -1023,7 +1218,7 @@
       els.sliderDots.addEventListener("click", (event) => {
         const dot = event.target.closest(".slider-dot");
         if (!dot) return;
-        goToSlide(Number(dot.getAttribute("data-slide")) || 0, false);
+        goToRealSlide(Number(dot.getAttribute("data-slide")) || 0);
       });
 
       if (els.projectsSliderShell) {
@@ -1041,36 +1236,99 @@
         });
       }
 
-      // Mouse drag-to-slide (preserves normal clicks on buttons/links)
+      // Mouse drag & touch swipe on the infinite GPU track
+      let pointerActive = false;
+      let dragAxis = null;
+      let dragPointerId = null;
       let dragStartX = 0;
-      let dragStartScroll = 0;
-      let dragMoved = false;
+      let dragStartY = 0;
+      let dragStartTrackX = 0;
+      let dragStartIndex = 0;
+      let dragLastX = 0;
+      let dragLastTime = 0;
+      let dragVelocity = 0;
       let suppressClickUntil = 0;
 
       els.projectsGrid.addEventListener("pointerdown", (event) => {
-        if (event.pointerType !== "mouse" || event.button !== 0) return;
+        if (sliderRealCount <= 1) return;
+        if (event.pointerType === "mouse" && event.button !== 0) return;
         if (event.target.closest("a, button")) return;
-        sliderDragging = true;
-        dragMoved = false;
+        stopSliderAnimation();
+        normalizeInfiniteTrack();
+        pointerActive = true;
+        dragAxis = null;
+        dragPointerId = event.pointerId;
         dragStartX = event.clientX;
-        dragStartScroll = els.projectsGrid.scrollLeft;
-        els.projectsGrid.classList.add("is-dragging");
+        dragStartY = event.clientY;
+        dragStartTrackX = sliderCurrentX;
+        dragStartIndex = sliderTrackIndex;
+        dragLastX = event.clientX;
+        dragLastTime = performance.now();
+        dragVelocity = 0;
       });
 
       window.addEventListener("pointermove", (event) => {
-        if (!sliderDragging) return;
-        const delta = event.clientX - dragStartX;
-        if (Math.abs(delta) > 6) dragMoved = true;
-        els.projectsGrid.scrollLeft = dragStartScroll - delta;
+        if (!pointerActive || event.pointerId !== dragPointerId) return;
+        const dx = event.clientX - dragStartX;
+        const dy = event.clientY - dragStartY;
+
+        if (!dragAxis) {
+          if (Math.abs(dx) < 6 && Math.abs(dy) < 6) return;
+          if (Math.abs(dy) > Math.abs(dx)) {
+            pointerActive = false;
+            return;
+          }
+          dragAxis = "x";
+          sliderDragging = true;
+          els.projectsGrid.classList.add("is-dragging");
+        }
+
+        const now = performance.now();
+        const dt = Math.max(1, now - dragLastTime);
+        dragVelocity = (event.clientX - dragLastX) / dt;
+        dragLastX = event.clientX;
+        dragLastTime = now;
+
+        const g = getSliderGeometry();
+        let nextX = dragStartTrackX + dx;
+        if (sliderInfinite && g.step > 0) {
+          const loopW = sliderRealCount * g.step;
+          const minX = getTrackXForIndex(SLIDER_CLONE_COUNT + sliderRealCount, g);
+          const maxX = getTrackXForIndex(SLIDER_CLONE_COUNT - 1, g);
+          while (nextX < minX) {
+            nextX += loopW;
+            dragStartTrackX += loopW;
+            dragStartIndex -= sliderRealCount;
+          }
+          while (nextX > maxX) {
+            nextX -= loopW;
+            dragStartTrackX -= loopW;
+            dragStartIndex += sliderRealCount;
+          }
+        }
+        applyTrackTransform(nextX);
       });
 
-      const endDrag = () => {
-        if (!sliderDragging) return;
+      const endDrag = (event) => {
+        if (!pointerActive) return;
+        if (event && event.pointerId != null && event.pointerId !== dragPointerId) return;
+        pointerActive = false;
+        const wasDragging = sliderDragging;
         sliderDragging = false;
+        dragAxis = null;
         els.projectsGrid.classList.remove("is-dragging");
-        if (dragMoved) {
-          suppressClickUntil = Date.now() + 220;
-          goToSlide(getCurrentSlideIndex(), false);
+
+        if (wasDragging) {
+          suppressClickUntil = Date.now() + 240;
+          const g = getSliderGeometry();
+          if (g.step > 0) {
+            let targetIdx = Math.round(((g.vpW - g.cardW) / 2 - sliderCurrentX) / g.step);
+            if (targetIdx === dragStartIndex && Math.abs(dragVelocity) > 0.28) {
+              targetIdx += dragVelocity < 0 ? 1 : -1;
+            }
+            targetIdx = Math.max(0, Math.min(g.cards.length - 1, targetIdx));
+            animateToTrackIndex(targetIdx, 480);
+          }
         }
       };
 
@@ -1082,13 +1340,15 @@
             event.stopPropagation();
             return;
           }
-          // Clicking any flanking side card selects & smoothly centers it first
+          // Clicking any flanking side card smoothly glides it into center focus
           const card = event.target.closest(".project-card");
           if (card && !card.classList.contains("is-selected")) {
             event.preventDefault();
             event.stopPropagation();
-            const idx = getSliderCards().indexOf(card);
-            if (idx >= 0) goToSlide(idx, false);
+            const clickedIdx = getSliderCards().indexOf(card);
+            if (clickedIdx >= 0) {
+              animateToTrackIndex(clickedIdx);
+            }
           }
         },
         true
@@ -1096,6 +1356,26 @@
 
       window.addEventListener("pointerup", endDrag);
       window.addEventListener("pointercancel", endDrag);
+
+      // Smooth horizontal trackpad swipe support
+      let wheelCooldownUntil = 0;
+      if (els.projectsViewport) {
+        els.projectsViewport.addEventListener(
+          "wheel",
+          (event) => {
+            if (sliderRealCount <= 1) return;
+            if (Math.abs(event.deltaX) <= Math.abs(event.deltaY) || Math.abs(event.deltaX) < 14) {
+              return;
+            }
+            event.preventDefault();
+            const now = Date.now();
+            if (now < wheelCooldownUntil) return;
+            wheelCooldownUntil = now + 420;
+            stepSliderBy(event.deltaX > 0 ? 1 : -1);
+          },
+          { passive: false }
+        );
+      }
 
       // Subtle interactive card cursor sheen
       els.projectsGrid.addEventListener(
@@ -1110,35 +1390,21 @@
         { passive: true }
       );
 
-      let scrollRaf = null;
-      els.projectsGrid.addEventListener(
-        "scroll",
-        () => {
-          if (scrollRaf) return;
-          scrollRaf = requestAnimationFrame(() => {
-            updateSliderUI();
-            scrollRaf = null;
-          });
-        },
-        { passive: true }
-      );
-
       els.projectsGrid.addEventListener("keydown", (event) => {
         if (event.key === "ArrowRight") {
           event.preventDefault();
-          goToSlide(getCurrentSlideIndex() + 1, true);
+          stepSliderBy(1);
         } else if (event.key === "ArrowLeft") {
           event.preventDefault();
-          goToSlide(getCurrentSlideIndex() - 1, true);
+          stepSliderBy(-1);
         }
       });
 
       window.addEventListener(
         "resize",
         () => {
-          const idx = getCurrentSlideIndex();
-          scrollCardToCenter(idx, "auto");
-          updateSliderUI(idx);
+          normalizeInfiniteTrack();
+          snapTrackToIndex(sliderTrackIndex);
         },
         { passive: true }
       );

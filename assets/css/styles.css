@@ -540,10 +540,13 @@ textarea {
 .projects-slider-shell {
   position: relative;
   --slide-w: 480px;
+  --slide-gap: 20px;
 }
 
 .projects-viewport {
   position: relative;
+  overflow: hidden;
+  touch-action: pan-y;
 }
 
 .projects-viewport::before,
@@ -577,26 +580,22 @@ textarea {
 .projects-grid {
   display: flex;
   align-items: stretch;
-  gap: 20px;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
-  padding: 18px max(0px, calc((100% - var(--slide-w)) / 2)) 26px;
+  gap: var(--slide-gap);
+  padding: 20px 0 30px;
   margin: -10px 0 0;
   cursor: grab;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
 }
 
 .projects-grid.is-dragging {
   cursor: grabbing;
-  scroll-snap-type: none;
-  scroll-behavior: auto;
   user-select: none;
 }
 
-.projects-grid::-webkit-scrollbar {
-  display: none;
+.projects-grid.is-instant,
+.projects-grid.is-instant .project-card {
+  transition: none !important;
 }
 
 .projects-grid:focus-visible {
@@ -608,8 +607,6 @@ textarea {
 .projects-grid .project-card {
   flex: 0 0 var(--slide-w);
   width: var(--slide-w);
-  scroll-snap-align: center;
-  scroll-snap-stop: always;
 }
 
 .slider-controls {
@@ -633,6 +630,17 @@ textarea {
   white-space: nowrap;
 }
 
+@keyframes sliderTitleSwap {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .slider-active-title {
   font-size: 13px;
   font-weight: 500;
@@ -643,6 +651,10 @@ textarea {
   max-width: 170px;
   padding-left: 10px;
   border-left: 1px solid var(--border);
+}
+
+.slider-active-title.is-swapping {
+  animation: sliderTitleSwap 0.34s var(--ease) both;
 }
 
 .slider-dots {
@@ -737,7 +749,20 @@ textarea {
   flex-direction: column;
   box-shadow: var(--shadow-sm);
   transform-origin: center center;
-  transition: opacity 0.42s var(--ease), transform 0.42s var(--ease), filter 0.38s var(--ease), border-color 0.25s var(--ease), box-shadow 0.35s var(--ease);
+  will-change: transform, opacity;
+  opacity: var(--card-opacity, 1);
+  transform: translate3d(0, var(--card-y, 0px), 0) scale(var(--card-scale, 1));
+  filter: saturate(var(--card-sat, 1));
+  transition: border-color 0.28s var(--ease), box-shadow 0.38s var(--ease);
+}
+
+.projects-grid:not(.is-animating):not(.is-dragging) .project-card {
+  transition:
+    opacity 0.28s var(--ease),
+    transform 0.32s var(--ease),
+    filter 0.28s var(--ease),
+    border-color 0.28s var(--ease),
+    box-shadow 0.38s var(--ease);
 }
 
 .project-card::before {
@@ -756,9 +781,6 @@ textarea {
 }
 
 .project-card.is-selected {
-  opacity: 1;
-  transform: scale(1) translateY(0);
-  filter: none;
   border-color: var(--border-strong);
   box-shadow: 0 22px 48px -18px rgba(0, 0, 0, 0.16), 0 0 0 1px var(--border-strong);
   z-index: 2;
@@ -772,30 +794,25 @@ textarea {
   opacity: 1;
 }
 
-.project-card.is-selected:hover {
-  transform: scale(1) translateY(-3px);
+.projects-grid:not(.is-animating):not(.is-dragging) .project-card.is-selected:hover {
+  transform: translate3d(0, -3px, 0) scale(1);
 }
 
 .project-card.is-side {
-  opacity: 0.52;
-  transform: scale(0.91);
-  filter: saturate(0.7);
   cursor: pointer;
   z-index: 1;
 }
 
-.project-card.is-side:hover {
-  opacity: 0.82;
-  transform: scale(0.94);
+.projects-grid:not(.is-animating):not(.is-dragging) .project-card.is-side:hover {
+  opacity: 0.84;
+  transform: translate3d(0, 2px, 0) scale(0.94);
   filter: saturate(1);
   border-color: var(--border-strong);
 }
 
 .project-card.is-far {
-  opacity: 0.3;
-  transform: scale(0.86);
-  filter: saturate(0.5);
   cursor: pointer;
+  z-index: 0;
 }
 
 .card-preview {
@@ -2481,11 +2498,6 @@ textarea {
   .skill-bar-fill {
     width: var(--pct, 0%);
   }
-  *,
-  *::before,
-  *::after {
-    transition-duration: 0.01ms !important;
-  }
 }
 
 /* Responsive */
@@ -2610,10 +2622,7 @@ textarea {
 
   .projects-slider-shell {
     --slide-w: min(360px, calc(100vw - 76px));
-  }
-
-  .projects-grid {
-    gap: 14px;
+    --slide-gap: 14px;
   }
 
   .projects-viewport::before,
