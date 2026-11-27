@@ -783,7 +783,7 @@
   }
 
   const AUTOPLAY_MS = 5500;
-  const SLIDER_CLONE_COUNT = 2;
+  const SLIDER_CLONE_COUNT = 3;
   const SLIDER_ANIM_MS = 580;
 
   let sliderFilteredProjects = [];
